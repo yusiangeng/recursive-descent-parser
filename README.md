@@ -8,6 +8,8 @@ Parser for a JavaScript-like language. Outputs a JSON abstract syntax tree (AST)
 bin/parse -e 'let x = 2 + 3;'
 ```
 
+Output:
+
 ```json
 {
   "type": "Program",
