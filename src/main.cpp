@@ -11,7 +11,7 @@ using json = nlohmann::json;
 int main(int argc, char *argv[]) {
   if (argc < 3) {
     std::cout << "Usage:\n"
-                 "  bin/parse -e '<your_program>'\n"
+                 "  bin/parse -e '<your program>'\n"
                  "  bin/parse -f path/to/file"
               << std::endl;
     return 1;
