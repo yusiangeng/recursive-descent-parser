@@ -25,6 +25,7 @@ int main() {
 
   Ast ast;
   try {
+    std::cout << "Parsing..." << std::endl;
     ast = parser.parse(program);
   } catch (SyntaxError e) {
     std::cout << "SyntaxError: " << e.what() << std::endl;

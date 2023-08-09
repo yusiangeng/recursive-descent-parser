@@ -32,6 +32,11 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     {"^\\}", TokenType::CurlyClose},
     {"^\\(", TokenType::ParenthesesOpen},
     {"^\\)", TokenType::ParenthesesClose},
+    {"^,", TokenType::Comma},
+
+    // ----------------------------------------------
+    // Keywords:
+    {"^\\blet\\b", TokenType::Let},
 
     // ----------------------------------------------
     // Numbers:
@@ -62,13 +67,15 @@ std::unordered_map<TokenType, std::string> tokenTypeStringMap{
     {TokenType::CurlyClose, "}"},
     {TokenType::ParenthesesOpen, "("},
     {TokenType::ParenthesesClose, ")"},
+    {TokenType::Comma, ","},
     {TokenType::AdditiveOperator, "ADDITIVE_OPERATOR"},
     {TokenType::MultiplicativeOperator, "MULTIPLICATIVE_OPERATOR"},
     {TokenType::Number, "NUMBER"},
     {TokenType::String, "STRING"},
     {TokenType::Identifier, "IDENTIFIER"},
     {TokenType::AssignSimple, "SIMPLE_ASSIGN"},
-    {TokenType::AssignComplex, "COMPLEX_ASSIGN"}};
+    {TokenType::AssignComplex, "COMPLEX_ASSIGN"},
+    {TokenType::Let, "let"}};
 
 Token::Token(TokenType type, std::string value) {
   this->type = type;

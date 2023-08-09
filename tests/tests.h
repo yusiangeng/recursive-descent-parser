@@ -12,3 +12,4 @@ void LiteralsTest(std::function<void(std::string, json)> test);
 void StatementListTest(std::function<void(std::string, json)> test);
 void MathTest(std::function<void(std::string, json)> test);
 void AssignmentTest(std::function<void(std::string, json)> test);
+void VariableTest(std::function<void(std::string, json)> test);

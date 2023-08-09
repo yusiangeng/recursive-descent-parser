@@ -18,7 +18,9 @@ enum class TokenType {
   String,
   Identifier,
   AssignSimple,
-  AssignComplex
+  AssignComplex,
+  Let,
+  Comma
 };
 
 extern std::unordered_map<TokenType, std::string> tokenTypeStringMap;

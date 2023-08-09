@@ -105,3 +105,32 @@ json IdentifierNode::toJson() const {
       {"name", name},
   };
 }
+
+VariableStatementNode::VariableStatementNode(
+    std::vector<AstNode *> declarations) {
+  type = "VariableStatement";
+  this->declarations = declarations;
+}
+
+json VariableStatementNode::toJson() const {
+  std::vector<json> declarationsJson;
+  for (AstNode *declaration : declarations) {
+    declarationsJson.push_back(declaration->toJson());
+  }
+  return json{
+      {"type", type},
+      {"declarations", declarationsJson},
+  };
+}
+
+VariableDeclarationNode::VariableDeclarationNode(AstNode *id, AstNode *init) {
+  type = "VariableDeclaration";
+  this->id = id;
+  this->init = init;
+}
+
+json VariableDeclarationNode::toJson() const {
+  return json{{"type", type},
+              {"id", id->toJson()},
+              {"init", init ? init->toJson() : nullptr}};
+}

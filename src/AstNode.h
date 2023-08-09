@@ -95,3 +95,22 @@ class IdentifierNode : public AstNode {
 
   json toJson() const override;
 };
+
+class VariableStatementNode : public AstNode {
+ public:
+  std::vector<AstNode *> declarations;
+
+  VariableStatementNode(std::vector<AstNode *> declarations);
+
+  json toJson() const override;
+};
+
+class VariableDeclarationNode : public AstNode {
+ public:
+  AstNode *id;
+  AstNode *init;  // nullptr if variable not initialized
+
+  VariableDeclarationNode(AstNode *id, AstNode *init);
+
+  json toJson() const override;
+};

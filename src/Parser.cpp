@@ -39,9 +39,47 @@ AstNode *Parser::Statement() {
       return EmptyStatement();
     case TokenType::CurlyOpen:
       return BlockStatement();
+    case TokenType::Let:
+      return VariableStatement();
     default:
       return ExpressionStatement();
   }
+}
+
+AstNode *Parser::VariableStatement() {
+  _eat(TokenType::Let);
+  std::vector<AstNode *> declarations = VariableDeclarationList();
+  _eat(TokenType::Semicolon);
+  return new VariableStatementNode(declarations);
+}
+
+std::vector<AstNode *> Parser::VariableDeclarationList() {
+  std::vector<AstNode *> declarations;
+
+  declarations.push_back(VariableDeclaration());
+  while (_lookahead->type == TokenType::Comma) {
+    _eat(TokenType::Comma);
+    declarations.push_back(VariableDeclaration());
+  }
+
+  return declarations;
+}
+
+AstNode *Parser::VariableDeclaration() {
+  AstNode *id = Identifier();
+
+  // OptVariableInitializer
+  AstNode *init = _lookahead->type != TokenType::Semicolon &&
+                          _lookahead->type != TokenType::Comma
+                      ? VariableInitializer()
+                      : nullptr;
+
+  return new VariableDeclarationNode(id, init);
+}
+
+AstNode *Parser::VariableInitializer() {
+  _eat(TokenType::AssignSimple);
+  return AssignmentExpression();
 }
 
 AstNode *Parser::EmptyStatement() {

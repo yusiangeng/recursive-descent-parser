@@ -51,9 +51,39 @@ class Parser {
    *  : ExpressionStatement
    *  | BlockStatement
    *  | EmptyStatement
+   *  | VariableStatement
    *  ;
    */
   AstNode *Statement();
+
+  /**
+   * VariableStatement
+   *  : 'let' VariableDeclarationList ';'
+   *  ;
+   */
+  AstNode *VariableStatement();
+
+  /**
+   * VariableDeclarationList
+   *  : VariableDeclaration
+   *  | VariableDeclarationList ',' VariableDeclaration
+   *  ;
+   */
+  std::vector<AstNode *> VariableDeclarationList();
+
+  /**
+   * VariableDeclaration
+   *  : Identifier OptVariableInitializer
+   *  ;
+   */
+  AstNode *VariableDeclaration();
+
+  /**
+   * VariableInitializer
+   *  : SIMPLE_ASSIGN AssignmentExpression
+   *  ;
+   */
+  AstNode *VariableInitializer();
 
   /**
    * EmptyStatement
@@ -156,7 +186,7 @@ class Parser {
 
   /**
    * Whether the token is a literal.
-  */
+   */
   bool _isLiteral(TokenType tokenType);
 
   /**
