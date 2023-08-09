@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     program = exp;
   } else if (mode == "-f") {
     std::ifstream file;
-    file.open("program.txt", std::ios::in);
+    file.open(exp, std::ios::in);
     if (file.is_open()) {
       char c;
       while (file.get(c)) {
