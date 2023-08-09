@@ -90,3 +90,11 @@ bin/parse -f path/to/file
 2. Install make.
 3. Run `make`.
 4. The executable will be created as `bin/parse`.
+
+## Run automated tests
+
+Run `make test`. Tests are defined in `tests` folder.
+
+## Third Party Libraries
+
+- [nlohmann/json](https://github.com/nlohmann/json)
