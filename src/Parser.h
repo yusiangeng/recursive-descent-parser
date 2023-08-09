@@ -84,6 +84,46 @@ class Parser {
   AstNode *Expression();
 
   /**
+   * AssignmentExpression
+   *  : AdditiveExpression
+   *  | LeftHandSideExpression AssignmentOperator AssignmentExpression
+   *  ;
+   */
+  AstNode *AssignmentExpression();
+
+  /**
+   * LeftHandSideExpression
+   *  : Identifier
+   *  ;
+   */
+  AstNode *LeftHandSideExpression();
+
+  /**
+   * Identifier
+   *  : IDENTIFIER
+   *  ;
+   */
+  AstNode *Identifier();
+
+  /**
+   * Extra check whether it's valid assignment target.
+   */
+  AstNode *_checkValidAssignmentTarget(AstNode *node);
+
+  /**
+   * Whether the token is an assignment operator.
+   */
+  bool _isAssignmentOperator(TokenType tokenType);
+
+  /**
+   * AssignmentOperator
+   *  : SIMPLE_ASSIGN
+   *  | COMPLEX_ASSIGN
+   *  ;
+   */
+  Token AssignmentOperator();
+
+  /**
    * AdditiveExpression
    *  : MultiplicativeExpression
    *  | AdditiveExpression ADDITIVE_OPERATOR MultiplicativeExpression
@@ -109,9 +149,15 @@ class Parser {
    * PrimaryExpression
    *  : Literal
    *  | ParenthesizedExpression
+   *  | LeftHandSideExpression
    *  ;
    */
   AstNode *PrimaryExpression();
+
+  /**
+   * Whether the token is a literal.
+  */
+  bool _isLiteral(TokenType tokenType);
 
   /**
    * ParenthesizedExpression

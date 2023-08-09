@@ -34,13 +34,22 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     {"^\\)", TokenType::ParenthesesClose},
 
     // ----------------------------------------------
+    // Numbers:
+    {"^[0-9]+", TokenType::Number},
+
+    // ----------------------------------------------
+    // Identifiers:
+    {"^[a-zA-Z0-9_]+", TokenType::Identifier},
+
+    // ----------------------------------------------
+    // Assignment operators: =, *=, /=, +=, -=
+    {"^=", TokenType::AssignSimple},
+    {"^[\\*/\\+-]=", TokenType::AssignComplex},
+
+    // ----------------------------------------------
     // Math operators: +, -, *, /
     {"^[+-]", TokenType::AdditiveOperator},
     {"^[*/]", TokenType::MultiplicativeOperator},
-
-    // ----------------------------------------------
-    // Numbers:
-    {"^[0-9]+", TokenType::Number},
 
     // ----------------------------------------------
     // Strings:
@@ -56,7 +65,10 @@ std::unordered_map<TokenType, std::string> tokenTypeStringMap{
     {TokenType::AdditiveOperator, "ADDITIVE_OPERATOR"},
     {TokenType::MultiplicativeOperator, "MULTIPLICATIVE_OPERATOR"},
     {TokenType::Number, "NUMBER"},
-    {TokenType::String, "STRING"}};
+    {TokenType::String, "STRING"},
+    {TokenType::Identifier, "IDENTIFIER"},
+    {TokenType::AssignSimple, "SIMPLE_ASSIGN"},
+    {TokenType::AssignComplex, "COMPLEX_ASSIGN"}};
 
 Token::Token(TokenType type, std::string value) {
   this->type = type;

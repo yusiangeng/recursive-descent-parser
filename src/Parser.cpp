@@ -69,7 +69,45 @@ AstNode *Parser::ExpressionStatement() {
   return new ExpressionStatementNode(expression);
 }
 
-AstNode *Parser::Expression() { return AdditiveExpression(); }
+AstNode *Parser::Expression() { return AssignmentExpression(); }
+
+AstNode *Parser::AssignmentExpression() {
+  AstNode *left = AdditiveExpression();
+
+  if (!_isAssignmentOperator(_lookahead->type)) {
+    return left;
+  }
+
+  return new AssignmentExpressionNode(AssignmentOperator().value,
+                                      _checkValidAssignmentTarget(left),
+                                      AssignmentExpression());
+}
+
+AstNode *Parser::LeftHandSideExpression() { return Identifier(); }
+
+AstNode *Parser::Identifier() {
+  std::string name = _eat(TokenType::Identifier).value;
+  return new IdentifierNode(name);
+}
+
+AstNode *Parser::_checkValidAssignmentTarget(AstNode *node) {
+  if (IdentifierNode *v = dynamic_cast<IdentifierNode *>(node)) {
+    return node;
+  }
+  throw SyntaxError("Invalid left-hand side in assignment expression");
+}
+
+bool Parser::_isAssignmentOperator(TokenType tokenType) {
+  return tokenType == TokenType::AssignSimple ||
+         tokenType == TokenType::AssignComplex;
+}
+
+Token Parser::AssignmentOperator() {
+  if (_lookahead->type == TokenType::AssignSimple) {
+    return _eat(TokenType::AssignSimple);
+  }
+  return _eat(TokenType::AssignComplex);
+}
 
 AstNode *Parser::AdditiveExpression() {
   return _BinaryExpression(std::bind(&Parser::MultiplicativeExpression, this),
@@ -98,12 +136,19 @@ AstNode *Parser::_BinaryExpression(std::function<AstNode *()> builder,
 }
 
 AstNode *Parser::PrimaryExpression() {
+  if (_isLiteral(_lookahead->type)) {
+    return Literal();
+  }
   switch (_lookahead->type) {
     case TokenType::ParenthesesOpen:
       return ParenthesizedExpression();
     default:
-      return Literal();
+      return LeftHandSideExpression();
   }
+}
+
+bool Parser::_isLiteral(TokenType tokenType) {
+  return tokenType == TokenType::Number || tokenType == TokenType::String;
 }
 
 AstNode *Parser::ParenthesizedExpression() {

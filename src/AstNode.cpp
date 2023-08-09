@@ -77,3 +77,31 @@ json BinaryExpressionNode::toJson() const {
               {"left", left->toJson()},
               {"right", right->toJson()}};
 }
+
+AssignmentExpressionNode::AssignmentExpressionNode(std::string op,
+                                                   AstNode *left,
+                                                   AstNode *right) {
+  type = "AssignmentExpression";
+  this->op = op;
+  this->left = left;
+  this->right = right;
+}
+
+json AssignmentExpressionNode::toJson() const {
+  return json{{"type", type},
+              {"operator", op},
+              {"left", left->toJson()},
+              {"right", right->toJson()}};
+}
+
+IdentifierNode::IdentifierNode(std::string name) {
+  type = "Identifier";
+  this->name = name;
+}
+
+json IdentifierNode::toJson() const {
+  return json{
+      {"type", type},
+      {"name", name},
+  };
+}

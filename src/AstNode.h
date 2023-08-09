@@ -75,3 +75,23 @@ class BinaryExpressionNode : public AstNode {
 
   json toJson() const override;
 };
+
+class AssignmentExpressionNode : public AstNode {
+ public:
+  std::string op;
+  AstNode *left;
+  AstNode *right;
+
+  AssignmentExpressionNode(std::string op, AstNode *left, AstNode *right);
+
+  json toJson() const override;
+};
+
+class IdentifierNode : public AstNode {
+ public:
+  std::string name;
+
+  IdentifierNode(std::string name);
+
+  json toJson() const override;
+};

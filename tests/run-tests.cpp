@@ -29,8 +29,8 @@ void test(std::string program, json expected) {
 
 int main() {
   std::vector<std::function<void(std::function<void(std::string, json)>)>>
-      tests{LiteralsTest, StatementListTest, BlockTest, EmptyStatementTest,
-            MathTest};
+      tests{LiteralsTest,       StatementListTest, BlockTest,
+            EmptyStatementTest, MathTest,          AssignmentTest};
 
   // Run all tests:
   for (auto testRun : tests) {

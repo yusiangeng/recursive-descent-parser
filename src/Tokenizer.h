@@ -15,7 +15,10 @@ enum class TokenType {
   AdditiveOperator,
   MultiplicativeOperator,
   Number,
-  String
+  String,
+  Identifier,
+  AssignSimple,
+  AssignComplex
 };
 
 extern std::unordered_map<TokenType, std::string> tokenTypeStringMap;
