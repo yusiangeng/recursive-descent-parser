@@ -114,3 +114,14 @@ class VariableDeclarationNode : public AstNode {
 
   json toJson() const override;
 };
+
+class IfStatementNode : public AstNode {
+ public:
+  AstNode *test;
+  AstNode *consequent;
+  AstNode *alternate;
+
+  IfStatementNode(AstNode *test, AstNode *consequent, AstNode *alternate);
+
+  json toJson() const override;
+};

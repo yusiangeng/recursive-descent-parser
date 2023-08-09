@@ -20,7 +20,10 @@ enum class TokenType {
   AssignSimple,
   AssignComplex,
   Let,
-  Comma
+  Comma,
+  If,
+  Else,
+  RelationalOperator
 };
 
 extern std::unordered_map<TokenType, std::string> tokenTypeStringMap;

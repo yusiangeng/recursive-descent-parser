@@ -52,9 +52,18 @@ class Parser {
    *  | BlockStatement
    *  | EmptyStatement
    *  | VariableStatement
+   *  | IfStatement
    *  ;
    */
   AstNode *Statement();
+
+  /**
+   * IfStatement
+   *  : 'if' '(' Expression ')' Statement
+   *  | 'if' '(' Expression ')' Statement 'else' Statement
+   *  ;
+   */
+  AstNode *IfStatement();
 
   /**
    * VariableStatement
@@ -115,7 +124,7 @@ class Parser {
 
   /**
    * AssignmentExpression
-   *  : AdditiveExpression
+   *  : RelationalExpression
    *  | LeftHandSideExpression AssignmentOperator AssignmentExpression
    *  ;
    */
@@ -152,6 +161,21 @@ class Parser {
    *  ;
    */
   Token AssignmentOperator();
+
+  /**
+   * RELATIONAL_OPERATOR: >, >=, <, <=
+   *
+   *  x > y
+   *  x >= y
+   *  x < y
+   *  x <= y
+   *
+   * RelationalExpression
+   *  : AdditiveExpression
+   *  | AdditiveExpression RELATIONAL_OPERATOR RelationalExpression
+   *  ;
+   */
+  AstNode *RelationalExpression();
 
   /**
    * AdditiveExpression

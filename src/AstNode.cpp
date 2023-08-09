@@ -134,3 +134,18 @@ json VariableDeclarationNode::toJson() const {
               {"id", id->toJson()},
               {"init", init ? init->toJson() : nullptr}};
 }
+
+IfStatementNode::IfStatementNode(AstNode *test, AstNode *consequent,
+                                 AstNode *alternate) {
+  type = "IfStatement";
+  this->test = test;
+  this->consequent = consequent;
+  this->alternate = alternate;
+}
+
+json IfStatementNode::toJson() const {
+  return json{{"type", type},
+              {"test", test->toJson()},
+              {"consequent", consequent ? consequent->toJson() : nullptr},
+              {"alternate", alternate ? alternate->toJson() : nullptr}};
+}

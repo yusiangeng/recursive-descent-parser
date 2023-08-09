@@ -37,6 +37,8 @@ AstNode *Parser::Statement() {
   switch (_lookahead->type) {
     case TokenType::Semicolon:
       return EmptyStatement();
+    case TokenType::If:
+      return IfStatement();
     case TokenType::CurlyOpen:
       return BlockStatement();
     case TokenType::Let:
@@ -44,6 +46,24 @@ AstNode *Parser::Statement() {
     default:
       return ExpressionStatement();
   }
+}
+
+AstNode *Parser::IfStatement() {
+  _eat(TokenType::If);
+
+  _eat(TokenType::ParenthesesOpen);
+  AstNode *test = Expression();
+  _eat(TokenType::ParenthesesClose);
+
+  AstNode *consequent = Statement();
+
+  AstNode *alternate = nullptr;
+  if (_lookahead && _lookahead->type == TokenType::Else) {
+    _eat(TokenType::Else);
+    alternate = Statement();
+  }
+
+  return new IfStatementNode(test, consequent, alternate);
 }
 
 AstNode *Parser::VariableStatement() {
@@ -110,7 +130,7 @@ AstNode *Parser::ExpressionStatement() {
 AstNode *Parser::Expression() { return AssignmentExpression(); }
 
 AstNode *Parser::AssignmentExpression() {
-  AstNode *left = AdditiveExpression();
+  AstNode *left = RelationalExpression();
 
   if (!_isAssignmentOperator(_lookahead->type)) {
     return left;
@@ -145,6 +165,11 @@ Token Parser::AssignmentOperator() {
     return _eat(TokenType::AssignSimple);
   }
   return _eat(TokenType::AssignComplex);
+}
+
+AstNode *Parser::RelationalExpression() {
+  return _BinaryExpression(std::bind(&Parser::AdditiveExpression, this),
+                           TokenType::RelationalOperator);
 }
 
 AstNode *Parser::AdditiveExpression() {

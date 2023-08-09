@@ -37,6 +37,8 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     // ----------------------------------------------
     // Keywords:
     {"^\\blet\\b", TokenType::Let},
+    {"^\\bif\\b", TokenType::If},
+    {"^\\belse\\b", TokenType::Else},
 
     // ----------------------------------------------
     // Numbers:
@@ -57,6 +59,10 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     {"^[*/]", TokenType::MultiplicativeOperator},
 
     // ----------------------------------------------
+    // Relational operators: >, >=, <, <=
+    {"^[><]=?", TokenType::RelationalOperator},
+
+    // ----------------------------------------------
     // Strings:
     {"^\"[^\"]*\"", TokenType::String},
     {"^'[^']*'", TokenType::String}};
@@ -75,7 +81,11 @@ std::unordered_map<TokenType, std::string> tokenTypeStringMap{
     {TokenType::Identifier, "IDENTIFIER"},
     {TokenType::AssignSimple, "SIMPLE_ASSIGN"},
     {TokenType::AssignComplex, "COMPLEX_ASSIGN"},
-    {TokenType::Let, "let"}};
+    {TokenType::Let, "let"},
+    {TokenType::If, "if"},
+    {TokenType::Else, "else"},
+    {TokenType::RelationalOperator, "RELATIONAL_OPERATOR"},
+};
 
 Token::Token(TokenType type, std::string value) {
   this->type = type;
