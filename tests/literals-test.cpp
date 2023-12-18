@@ -34,4 +34,24 @@ void LiteralsTest(std::function<void(std::string, json)> test) {
                   {"expression",
                    {{"type", "StringLiteral"}, {"value", "hello"}}}},
              }}});
+
+  // BooleanLiteral
+  test(
+      R"(true;)",
+      json{{"type", "Program"},
+           {"body",
+            {
+                {{"type", "ExpressionStatement"},
+                 {"expression", {{"type", "BooleanLiteral"}, {"value", true}}}},
+            }}});
+
+  // NullLiteral
+  test(
+      R"(null;)",
+      json{{"type", "Program"},
+           {"body",
+            {
+                {{"type", "ExpressionStatement"},
+                 {"expression", {{"type", "NullLiteral"}, {"value", nullptr}}}},
+            }}});
 }

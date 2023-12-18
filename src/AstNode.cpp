@@ -149,3 +149,17 @@ json IfStatementNode::toJson() const {
               {"consequent", consequent ? consequent->toJson() : nullptr},
               {"alternate", alternate ? alternate->toJson() : nullptr}};
 }
+
+BooleanLiteralNode::BooleanLiteralNode(bool value) : value(value) {
+  type = "BooleanLiteral";
+}
+
+json BooleanLiteralNode::toJson() const {
+  return json{{"type", type}, {"value", value}};
+}
+
+NullLiteralNode::NullLiteralNode() { type = "NullLiteral"; }
+
+json NullLiteralNode::toJson() const {
+  return json{{"type", type}, {"value", nullptr}};
+}

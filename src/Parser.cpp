@@ -130,7 +130,7 @@ AstNode *Parser::ExpressionStatement() {
 AstNode *Parser::Expression() { return AssignmentExpression(); }
 
 AstNode *Parser::AssignmentExpression() {
-  AstNode *left = RelationalExpression();
+  AstNode *left = EqualityExpression();
 
   if (!_isAssignmentOperator(_lookahead->type)) {
     return left;
@@ -165,6 +165,11 @@ Token Parser::AssignmentOperator() {
     return _eat(TokenType::AssignSimple);
   }
   return _eat(TokenType::AssignComplex);
+}
+
+AstNode *Parser::EqualityExpression() {
+  return _BinaryExpression(std::bind(&Parser::RelationalExpression, this),
+                           TokenType::EqualityOperator);
 }
 
 AstNode *Parser::RelationalExpression() {
@@ -211,7 +216,11 @@ AstNode *Parser::PrimaryExpression() {
 }
 
 bool Parser::_isLiteral(TokenType tokenType) {
-  return tokenType == TokenType::Number || tokenType == TokenType::String;
+  std::vector<TokenType> literalTokenTypes{TokenType::Number, TokenType::String,
+                                           TokenType::True, TokenType::False,
+                                           TokenType::NullSymbol};
+  return std::find(literalTokenTypes.begin(), literalTokenTypes.end(),
+                   tokenType) != literalTokenTypes.end();
 }
 
 AstNode *Parser::ParenthesizedExpression() {
@@ -227,9 +236,26 @@ AstNode *Parser::Literal() {
       return NumericLiteral();
     case TokenType::String:
       return StringLiteral();
+    case TokenType::True:
+      return BooleanLiteral(true);
+    case TokenType::False:
+      return BooleanLiteral(false);
+    case TokenType::NullSymbol:
+      return NullLiteral();
+
     default:
       throw SyntaxError("Literal: unexpected literal production");
   }
+}
+
+AstNode *Parser::BooleanLiteral(bool value) {
+  _eat(value ? TokenType::True : TokenType::False);
+  return new BooleanLiteralNode(value);
+}
+
+AstNode *Parser::NullLiteral() {
+  _eat(TokenType::NullSymbol);
+  return new NullLiteralNode();
 }
 
 AstNode *Parser::StringLiteral() {

@@ -10,20 +10,22 @@
 
 /**
  * Tokenizer spec.
+ *
+ * In order of precedence.
  */
 static std::vector<std::pair<std::string, TokenType>> Spec{
     // ----------------------------------------------
     // Whitespace:
-    {"^[ \t\r\n\f]+", TokenType::Null},
+    {"^[ \t\r\n\f]+", TokenType::IgnoreToken},
 
     // ----------------------------------------------
     // Comments:
 
     // Skip single-line comments:
-    {"^//.*", TokenType::Null},
+    {"^//.*", TokenType::IgnoreToken},
 
     // Skip multi-line comments:
-    {"^/\\*(.|\n)*\\*/", TokenType::Null},
+    {"^/\\*(.|\n)*\\*/", TokenType::IgnoreToken},
 
     // ----------------------------------------------
     // Symbols, delimiters:
@@ -39,6 +41,9 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     {"^\\blet\\b", TokenType::Let},
     {"^\\bif\\b", TokenType::If},
     {"^\\belse\\b", TokenType::Else},
+    {"^\\btrue\\b", TokenType::True},
+    {"^\\bfalse\\b", TokenType::False},
+    {"^\\bnull\\b", TokenType::NullSymbol},
 
     // ----------------------------------------------
     // Numbers:
@@ -47,6 +52,10 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     // ----------------------------------------------
     // Identifiers:
     {"^[a-zA-Z0-9_]+", TokenType::Identifier},
+
+    // ----------------------------------------------
+    // Equality operators: ==, !=
+    {"^[=!]=", TokenType::EqualityOperator},
 
     // ----------------------------------------------
     // Assignment operators: =, *=, /=, +=, -=
@@ -117,7 +126,7 @@ std::optional<Token> Tokenizer::getNextToken() {
     }
 
     // Should skip token, e.g. whitespace.
-    if (tokenType == TokenType::Null) {
+    if (tokenType == TokenType::IgnoreToken) {
       return getNextToken();
     }
 

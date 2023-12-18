@@ -125,3 +125,19 @@ class IfStatementNode : public AstNode {
 
   json toJson() const override;
 };
+
+class BooleanLiteralNode : public AstNode {
+ public:
+  bool value;
+
+  BooleanLiteralNode(bool value);
+
+  json toJson() const override;
+};
+
+class NullLiteralNode : public AstNode {
+ public:
+  NullLiteralNode();
+
+  json toJson() const override;
+};

@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 enum class TokenType {
-  Null,
+  IgnoreToken,
   Semicolon,
   CurlyOpen,
   CurlyClose,
@@ -23,7 +23,11 @@ enum class TokenType {
   Comma,
   If,
   Else,
-  RelationalOperator
+  RelationalOperator,
+  EqualityOperator,
+  True,
+  False,
+  NullSymbol
 };
 
 extern std::unordered_map<TokenType, std::string> tokenTypeStringMap;

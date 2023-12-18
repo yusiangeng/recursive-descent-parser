@@ -12,21 +12,10 @@ class Ast {
 
 class Parser {
  public:
-  std::string _string = "";
-  Tokenizer _tokenizer;
-
-  // The lookahead is used for predictive parsing.
-  std::optional<Token> _lookahead;
-
   /**
    * Parses a string into an AST.
    */
   Ast parse(std::string str);
-
-  /**
-   * Expects a token of a given type.
-   */
-  Token _eat(TokenType tokenType);
 
   /**
    * Main entry point.
@@ -44,7 +33,7 @@ class Parser {
    *  ;
    */
   std::vector<AstNode *> StatementList(
-      TokenType stopLookahead = TokenType::Null);
+      TokenType stopLookahead = TokenType::IgnoreToken);
 
   /**
    * Statement
@@ -124,7 +113,7 @@ class Parser {
 
   /**
    * AssignmentExpression
-   *  : RelationalExpression
+   *  : EqualityExpression
    *  | LeftHandSideExpression AssignmentOperator AssignmentExpression
    *  ;
    */
@@ -145,22 +134,25 @@ class Parser {
   AstNode *Identifier();
 
   /**
-   * Extra check whether it's valid assignment target.
-   */
-  AstNode *_checkValidAssignmentTarget(AstNode *node);
-
-  /**
-   * Whether the token is an assignment operator.
-   */
-  bool _isAssignmentOperator(TokenType tokenType);
-
-  /**
    * AssignmentOperator
    *  : SIMPLE_ASSIGN
    *  | COMPLEX_ASSIGN
    *  ;
    */
   Token AssignmentOperator();
+
+  /**
+   * EQUALITY_OPERATOR: ==, !=
+   *
+   *  x == y
+   *  x != y
+   *
+   * EqualityExpression
+   *  : RelationalExpression EQUALITY_OPERATOR EqualityExpression
+   *  | RelationalExpression
+   *  ;
+   */
+  AstNode *EqualityExpression();
 
   /**
    * RELATIONAL_OPERATOR: >, >=, <, <=
@@ -194,12 +186,6 @@ class Parser {
   AstNode *MultiplicativeExpression();
 
   /**
-   * Generic binary expression.
-   */
-  AstNode *_BinaryExpression(std::function<AstNode *()> builder,
-                             TokenType operatorToken);
-
-  /**
    * PrimaryExpression
    *  : Literal
    *  | ParenthesizedExpression
@@ -207,11 +193,6 @@ class Parser {
    *  ;
    */
   AstNode *PrimaryExpression();
-
-  /**
-   * Whether the token is a literal.
-   */
-  bool _isLiteral(TokenType tokenType);
 
   /**
    * ParenthesizedExpression
@@ -224,9 +205,26 @@ class Parser {
    * Literal
    *  : NumericLiteral
    *  | StringLiteral
+   *  | BooleanLiteral
+   *  | NullLiteral
    *  ;
    */
   AstNode *Literal();
+
+  /**
+   * BooleanLiteral
+   *  : 'true'
+   *  | 'false'
+   *  ;
+   */
+  AstNode *BooleanLiteral(bool value);
+
+  /**
+   * NullLiteral
+   *  : 'null'
+   *  ;
+   */
+  AstNode *NullLiteral();
 
   /**
    * StringLiteral
@@ -241,6 +239,39 @@ class Parser {
    *  ;
    */
   AstNode *NumericLiteral();
+
+ private:
+  std::string _string = "";
+  Tokenizer _tokenizer;
+
+  // The lookahead is used for predictive parsing.
+  std::optional<Token> _lookahead;
+
+  /**
+   * Expects a token of a given type.
+   */
+  Token _eat(TokenType tokenType);
+
+  /**
+   * Whether the token is a literal.
+   */
+  bool _isLiteral(TokenType tokenType);
+
+  /**
+   * Whether the token is an assignment operator.
+   */
+  bool _isAssignmentOperator(TokenType tokenType);
+
+  /**
+   *  Generic binary expression.
+   */
+  AstNode *_BinaryExpression(std::function<AstNode *()> builder,
+                             TokenType operatorToken);
+
+  /**
+   * Extra check whether it's valid assignment target.
+   */
+  AstNode *_checkValidAssignmentTarget(AstNode *node);
 };
 
 // This function is required by nlohmann/json library to construct json from
