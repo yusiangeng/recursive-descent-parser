@@ -45,7 +45,7 @@ $(OBJ_PATH)/%.o: $(TEST_PATH)/%.cpp
 
 .PHONY: makedir
 makedir:
-	@mkdir -p $(BIN_PATH) $(OBJ_PATH) $(DBG_PATH)
+	@mkdir -p $(BIN_PATH) $(OBJ_PATH)
 
 .PHONY: clean
 clean:
