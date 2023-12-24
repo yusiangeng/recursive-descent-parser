@@ -16,3 +16,4 @@ void VariableTest(std::function<void(std::string, json)> test);
 void IfTest(std::function<void(std::string, json)> test);
 void RelationalTest(std::function<void(std::string, json)> test);
 void EqualityTest(std::function<void(std::string, json)> test);
+void LogicalTest(std::function<void(std::string, json)> test);

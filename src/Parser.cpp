@@ -130,7 +130,7 @@ AstNode *Parser::ExpressionStatement() {
 AstNode *Parser::Expression() { return AssignmentExpression(); }
 
 AstNode *Parser::AssignmentExpression() {
-  AstNode *left = EqualityExpression();
+  AstNode *left = LogicalORExpression();
 
   if (!_isAssignmentOperator(_lookahead->type)) {
     return left;
@@ -155,6 +155,21 @@ AstNode *Parser::_checkValidAssignmentTarget(AstNode *node) {
   throw SyntaxError("Invalid left-hand side in assignment expression");
 }
 
+AstNode *Parser::_LogicalExpression(std::function<AstNode *()> builder,
+                                    TokenType operatorToken) {
+  AstNode *left = builder();
+
+  while (_lookahead->type == operatorToken) {
+    std::string op = _eat(operatorToken).value;
+
+    AstNode *right = builder();
+
+    left = new LogicalExpressionNode(op, left, right);
+  }
+
+  return left;
+}
+
 bool Parser::_isAssignmentOperator(TokenType tokenType) {
   return tokenType == TokenType::AssignSimple ||
          tokenType == TokenType::AssignComplex;
@@ -165,6 +180,16 @@ Token Parser::AssignmentOperator() {
     return _eat(TokenType::AssignSimple);
   }
   return _eat(TokenType::AssignComplex);
+}
+
+AstNode *Parser::LogicalORExpression() {
+  return _LogicalExpression(std::bind(&Parser::LogicalANDExpression, this),
+                            TokenType::LogicalOr);
+}
+
+AstNode *Parser::LogicalANDExpression() {
+  return _LogicalExpression(std::bind(&Parser::EqualityExpression, this),
+                            TokenType::LogicalAnd);
 }
 
 AstNode *Parser::EqualityExpression() {
@@ -287,8 +312,6 @@ Token Parser::_eat(TokenType tokenType) {
                       "\", expected: \"" + tokenTypeStringMap[tokenType] +
                       "\"");
   }
-
-  // std::cout << "ate token " << token->value << std::endl;
 
   // Advance to next token.
   _lookahead = _tokenizer.getNextToken();

@@ -31,7 +31,7 @@ int main() {
   std::vector<std::function<void(std::function<void(std::string, json)>)>>
       tests{LiteralsTest,   StatementListTest, BlockTest,    EmptyStatementTest,
             MathTest,       AssignmentTest,    VariableTest, IfTest,
-            RelationalTest, EqualityTest};
+            RelationalTest, EqualityTest,      LogicalTest};
 
   // Run all tests:
   for (auto testRun : tests) {

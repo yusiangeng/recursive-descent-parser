@@ -163,3 +163,18 @@ NullLiteralNode::NullLiteralNode() { type = "NullLiteral"; }
 json NullLiteralNode::toJson() const {
   return json{{"type", type}, {"value", nullptr}};
 }
+
+LogicalExpressionNode::LogicalExpressionNode(std::string op, AstNode *left,
+                                             AstNode *right) {
+  type = "LogicalExpression";
+  this->op = op;
+  this->left = left;
+  this->right = right;
+}
+
+json LogicalExpressionNode::toJson() const {
+  return json{{"type", type},
+              {"operator", op},
+              {"left", left->toJson()},
+              {"right", right->toJson()}};
+}

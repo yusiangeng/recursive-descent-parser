@@ -141,3 +141,14 @@ class NullLiteralNode : public AstNode {
 
   json toJson() const override;
 };
+
+class LogicalExpressionNode : public AstNode {
+ public:
+  std::string op;
+  AstNode *left;
+  AstNode *right;
+
+  LogicalExpressionNode(std::string op, AstNode *left, AstNode *right);
+
+  json toJson() const override;
+};

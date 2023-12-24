@@ -17,6 +17,18 @@ class Parser {
    */
   Ast parse(std::string str);
 
+ private:
+  std::string _string = "";
+  Tokenizer _tokenizer;
+
+  // The lookahead is used for predictive parsing.
+  std::optional<Token> _lookahead;
+
+  /**
+   * Expects a token of a given type.
+   */
+  Token _eat(TokenType tokenType);
+
   /**
    * Main entry point.
    *
@@ -113,7 +125,7 @@ class Parser {
 
   /**
    * AssignmentExpression
-   *  : EqualityExpression
+   *  : LogicalORExpression 
    *  | LeftHandSideExpression AssignmentOperator AssignmentExpression
    *  ;
    */
@@ -140,6 +152,32 @@ class Parser {
    *  ;
    */
   Token AssignmentOperator();
+
+  /**
+   * Logical OR expression.
+   *
+   *  x || y
+   *
+   * LogicalORExpression
+   *  : LogicalANDExpression LOGICAL_OR LogicalORExpression
+   *  | LogicalANDExpression
+   *  ;
+   *
+   */
+  AstNode *LogicalORExpression();
+
+  /**
+   * Logical AND expression.
+   *
+   *  x && y
+   *
+   * LogicalANDExpression
+   *  : EqualityExpression LOGICAL_AND LogicalANDExpression
+   *  | EqualityExpression
+   *  ;
+   *
+   */
+  AstNode *LogicalANDExpression();
 
   /**
    * EQUALITY_OPERATOR: ==, !=
@@ -240,18 +278,6 @@ class Parser {
    */
   AstNode *NumericLiteral();
 
- private:
-  std::string _string = "";
-  Tokenizer _tokenizer;
-
-  // The lookahead is used for predictive parsing.
-  std::optional<Token> _lookahead;
-
-  /**
-   * Expects a token of a given type.
-   */
-  Token _eat(TokenType tokenType);
-
   /**
    * Whether the token is a literal.
    */
@@ -272,6 +298,12 @@ class Parser {
    * Extra check whether it's valid assignment target.
    */
   AstNode *_checkValidAssignmentTarget(AstNode *node);
+
+  /**
+   * Generic helper for LogicalExpression nodes.
+   */
+  AstNode *_LogicalExpression(std::function<AstNode *()> builder,
+                              TokenType operatorToken);
 };
 
 // This function is required by nlohmann/json library to construct json from

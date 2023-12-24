@@ -72,6 +72,11 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     {"^[><]=?", TokenType::RelationalOperator},
 
     // ----------------------------------------------
+    // Logical operators: &&, ||
+    {"^&&", TokenType::LogicalAnd},
+    {"^\\|\\|", TokenType::LogicalOr},
+
+    // ----------------------------------------------
     // Strings:
     {"^\"[^\"]*\"", TokenType::String},
     {"^'[^']*'", TokenType::String}};
