@@ -1,3 +1,5 @@
+![test workflow](https://github.com/yusiangeng/recursive-descent-parser/actions/workflows/test.yaml/badge.svg)
+
 # Recursive Descent Parser
 
 Parser for a JavaScript-like language. Outputs a JSON abstract syntax tree (AST).
