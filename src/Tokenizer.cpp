@@ -72,9 +72,10 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     {"^[><]=?", TokenType::RelationalOperator},
 
     // ----------------------------------------------
-    // Logical operators: &&, ||
+    // Logical operators: &&, ||, !
     {"^&&", TokenType::LogicalAnd},
     {"^\\|\\|", TokenType::LogicalOr},
+    {"^!", TokenType::LogicalNot},
 
     // ----------------------------------------------
     // Strings:
@@ -134,9 +135,6 @@ std::optional<Token> Tokenizer::getNextToken() {
     if (tokenType == TokenType::IgnoreToken) {
       return getNextToken();
     }
-
-    // std::cout << "matched " << tokenTypeStringMap[tokenType] << " "
-    // << *tokenValue << std::endl;
 
     return Token(tokenType, *tokenValue);
   }

@@ -29,7 +29,8 @@ enum class TokenType {
   False,
   NullSymbol,
   LogicalAnd,
-  LogicalOr
+  LogicalOr,
+  LogicalNot
 };
 
 extern std::unordered_map<TokenType, std::string> tokenTypeStringMap;

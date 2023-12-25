@@ -141,7 +141,7 @@ AstNode *Parser::AssignmentExpression() {
                                       AssignmentExpression());
 }
 
-AstNode *Parser::LeftHandSideExpression() { return Identifier(); }
+AstNode *Parser::LeftHandSideExpression() { return PrimaryExpression(); }
 
 AstNode *Parser::Identifier() {
   std::string name = _eat(TokenType::Identifier).value;
@@ -208,8 +208,28 @@ AstNode *Parser::AdditiveExpression() {
 }
 
 AstNode *Parser::MultiplicativeExpression() {
-  return _BinaryExpression(std::bind(&Parser::PrimaryExpression, this),
+  return _BinaryExpression(std::bind(&Parser::UnaryExpression, this),
                            TokenType::MultiplicativeOperator);
+}
+
+AstNode *Parser::UnaryExpression() {
+  std::string op = "";
+  switch (_lookahead->type) {
+    case TokenType::AdditiveOperator:
+      op = _eat(TokenType::AdditiveOperator).value;
+      break;
+    case TokenType::LogicalNot:
+      op = _eat(TokenType::LogicalNot).value;
+      break;
+    default:
+      break;
+  }
+
+  if (op != "") {
+    return new UnaryExpressionNode(op, UnaryExpression());
+  }
+
+  return LeftHandSideExpression();
 }
 
 AstNode *Parser::_BinaryExpression(std::function<AstNode *()> builder,
@@ -235,6 +255,8 @@ AstNode *Parser::PrimaryExpression() {
   switch (_lookahead->type) {
     case TokenType::ParenthesesOpen:
       return ParenthesizedExpression();
+    case TokenType::Identifier:
+      return Identifier();
     default:
       return LeftHandSideExpression();
   }

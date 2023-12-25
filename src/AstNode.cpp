@@ -178,3 +178,14 @@ json LogicalExpressionNode::toJson() const {
               {"left", left->toJson()},
               {"right", right->toJson()}};
 }
+
+UnaryExpressionNode::UnaryExpressionNode(std::string op, AstNode *argument) {
+  type = "UnaryExpression";
+  this->op = op;
+  this->argument = argument;
+}
+
+json UnaryExpressionNode::toJson() const {
+  return json{
+      {"type", type}, {"operator", op}, {"argument", argument->toJson()}};
+}

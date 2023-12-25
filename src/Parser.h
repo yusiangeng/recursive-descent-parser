@@ -125,7 +125,7 @@ class Parser {
 
   /**
    * AssignmentExpression
-   *  : LogicalORExpression 
+   *  : LogicalORExpression
    *  | LeftHandSideExpression AssignmentOperator AssignmentExpression
    *  ;
    */
@@ -217,17 +217,26 @@ class Parser {
 
   /**
    * MultiplicativeExpression
-   *  : PrimaryExpression
-   *  | MultiplicativeExpression MULTIPLICATIVE_OPERATOR PrimaryExpression
+   *  : UnaryExpression
+   *  | MultiplicativeExpression MULTIPLICATIVE_OPERATOR UnaryExpression
    *  ;
    */
   AstNode *MultiplicativeExpression();
 
   /**
+   * UnaryExpression 
+   *  : LeftHandSideExpression
+   *  | ADDITIVE_OPERATOR UnaryExpression
+   *  | LOGICAL_NOT UnaryExpression
+   *  ;
+   */
+  AstNode *UnaryExpression();
+
+  /**
    * PrimaryExpression
    *  : Literal
    *  | ParenthesizedExpression
-   *  | LeftHandSideExpression
+   *  | Identifier
    *  ;
    */
   AstNode *PrimaryExpression();

@@ -152,3 +152,13 @@ class LogicalExpressionNode : public AstNode {
 
   json toJson() const override;
 };
+
+class UnaryExpressionNode : public AstNode {
+ public:
+  std::string op;
+  AstNode *argument;
+
+  UnaryExpressionNode(std::string op, AstNode *argument);
+
+  json toJson() const override;
+};
