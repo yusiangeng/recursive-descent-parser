@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
   try {
     ast = parser.parse(program);
   } catch (SyntaxError e) {
-    std::cout << "SyntaxError: " << e.what() << std::endl;
+    std::cout << "SyntaxError: " << e.getMsg() << std::endl;
     return 1;
   }
 

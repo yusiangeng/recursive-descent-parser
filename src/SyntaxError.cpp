@@ -3,4 +3,6 @@
 #include <iostream>
 #include <string>
 
-SyntaxError::SyntaxError(const std::string& what) : std::runtime_error(what) {}
+SyntaxError::SyntaxError(const std::string& msg) : msg(msg) {}
+
+std::string SyntaxError::getMsg() { return msg; }
