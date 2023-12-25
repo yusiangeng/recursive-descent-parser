@@ -88,15 +88,14 @@ bin/parse -f path/to/file
 
 ## How to Build
 
-1. Install a C++ compiler. The `Makefile` uses `g++` by default. If you are using something else, change the `CXX` variable accordingly.
-2. Install make.
-3. Run `make`.
-4. The executable will be created as `bin/parse`.
+Run `make`. The executable will be created as `bin/parse`.
+
 
 ## Run automated tests
 
 Run `make test`. Tests are defined in `tests` folder.
 
-## Third Party Libraries
+
+## Third Party Libraries used
 
 - [nlohmann/json](https://github.com/nlohmann/json)
