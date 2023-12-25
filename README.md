@@ -62,7 +62,7 @@ bin/parse -f path/to/file
   ```js
   let x, y = 10, z = "hello";
   ```
-- Supported types: integer, string
+- Supported types: integer, string, boolean, null
 - Assignment
   ```js
   x = 10;

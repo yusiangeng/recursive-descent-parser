@@ -73,32 +73,44 @@ void VariableTest(std::function<void(std::string, json)> test) {
                             }});
 
   // Multiple variable declarations,:
-  test(R"(let x, y = 42;)",
+  test(R"(let w = null, x, y = 42, z = false;)",
        json{{"type", "Program"},
             {
                 "body",
-                {
-                    {{"type", "VariableStatement"},
-                     {"declarations",
-                      {
-                          {{"type", "VariableDeclaration"},
-                           {"id",
-                            {
-                                {"type", "Identifier"},
-                                {"name", "x"},
-                            }},
-                           {"init", nullptr}},
-                          {{"type", "VariableDeclaration"},
-                           {"id",
-                            {
-                                {"type", "Identifier"},
-                                {"name", "y"},
-                            }},
-                           {
-                               "init",
-                               {{"type", "NumericLiteral"}, {"value", 42}},
-                           }},
-                      }}},
-                },
+                {{
+                    {"type", "VariableStatement"},
+                    {"declarations",
+                     {
+                         {
+                             {"type", "VariableDeclaration"},
+                             {"id", {{"type", "Identifier"}, {"name", "w"}}},
+                             {
+                                 "init",
+                                 {{"type", "NullLiteral"}, {"value", nullptr}},
+                             },
+                         },
+                         {
+                             {"type", "VariableDeclaration"},
+                             {"id", {{"type", "Identifier"}, {"name", "x"}}},
+                             {"init", nullptr},
+                         },
+                         {
+                             {"type", "VariableDeclaration"},
+                             {"id", {{"type", "Identifier"}, {"name", "y"}}},
+                             {
+                                 "init",
+                                 {{"type", "NumericLiteral"}, {"value", 42}},
+                             },
+                         },
+                         {
+                             {"type", "VariableDeclaration"},
+                             {"id", {{"type", "Identifier"}, {"name", "z"}}},
+                             {
+                                 "init",
+                                 {{"type", "BooleanLiteral"}, {"value", false}},
+                             },
+                         },
+                     }},
+                }},
             }});
 }
