@@ -4,6 +4,7 @@
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 enum class TokenType {
   IgnoreToken,
@@ -71,7 +72,7 @@ class Tokenizer {
 
  private:
   std::string _string;
-  long long _cursor;
+  size_t _cursor;
 
   /**
    * Whether the tokenizer has reached EOF.
