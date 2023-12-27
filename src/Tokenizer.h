@@ -50,13 +50,19 @@ class Token {
  */
 class Tokenizer {
  public:
-  std::string _string;
-  long long _cursor;
-
   /**
    * Initializes the string.
    */
   void init(std::string str);
+
+  /**
+   * Obtains next token.
+   */
+  std::optional<Token> getNextToken();
+
+ private:
+  std::string _string;
+  long long _cursor;
 
   /**
    * Whether the tokenizer has reached EOF.
@@ -67,11 +73,6 @@ class Tokenizer {
    * Whether we still have more tokens.
    */
   bool hasMoreTokens();
-
-  /**
-   * Obtains next token.
-   */
-  std::optional<Token> getNextToken();
 
   /**
    * Matches a token for a regular expression.
