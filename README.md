@@ -63,16 +63,20 @@ bin/parse -f path/to/file
   ```js
   4 * (5 + 6) / 2;
   ```
+
 - Variable declarations with no explicit typing
   ```js
   let x, y = 10, z = "hello";
   ```
-- Supported types: integer, string, boolean, null
+
+- Supported types: integer (`123`), string (`"hello"`), boolean (`true`/`false`), `null`
+  
 - Assignment
   ```js
   x = 10;
   y += 2;
   ```
+
 - Block scopes
   ```js
   let x = 2;
@@ -80,6 +84,7 @@ bin/parse -f path/to/file
     let y = 3;
   }
   ```
+
 - If-else statements
   ```js
   if (x > 3) {
@@ -89,10 +94,21 @@ bin/parse -f path/to/file
   }
   ```
 
+- Loops
+  ```js
+  while (x < 3) {
+    x += 1;
+  }
+
+  for (let i = 0; i < 3; i += 1) {
+    x += i;
+  }
+  ```
+
 
 ## How to Build
 
-Run `make`. The executable will be created as `bin/parse`.
+Run `make`. The executable will be created in path `bin/parse`.
 
 
 ## Run automated tests
