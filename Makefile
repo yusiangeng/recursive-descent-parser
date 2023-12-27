@@ -5,16 +5,13 @@ OBJ_PATH := obj
 SRC_PATH := src
 TEST_PATH := tests
 TARGET_NAME := parse
-TEST_TARGET_NAME := run_tests
+TEST_TARGET_NAME := run-tests
 ifeq ($(OS),Windows_NT)
 	TARGET_NAME := $(addsuffix .exe,$(TARGET_NAME))
 	TEST_TARGET_NAME := $(addsuffix .exe,$(TEST_TARGET_NAME))
 endif
 TARGET := $(BIN_PATH)/$(TARGET_NAME)
 TEST_TARGET := $(BIN_PATH)/$(TEST_TARGET_NAME)
-ifeq ($(OS),Windows_NT)
-	TEST_TARGET := $(BIN_PATH)\$(TEST_TARGET_NAME)
-endif
 SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c*)))
 OBJ := $(addprefix $(OBJ_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
 SRC_TEST := $(wildcard $(TEST_PATH)/*.cpp)
