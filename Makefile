@@ -6,10 +6,10 @@ SRC_PATH := src
 TEST_PATH := tests
 TARGET_NAME := parse
 TEST_TARGET_NAME := run_tests
-# ifeq ($(OS),Windows_NT)
-# 	TARGET_NAME := $(addsuffix .exe,$(TARGET_NAME))
-# 	TEST_TARGET_NAME := $(addsuffix .exe,$(TEST_TARGET_NAME))
-# endif
+ifeq ($(OS),Windows_NT)
+	TARGET_NAME := $(addsuffix .exe,$(TARGET_NAME))
+	TEST_TARGET_NAME := $(addsuffix .exe,$(TEST_TARGET_NAME))
+endif
 TARGET := $(BIN_PATH)/$(TARGET_NAME)
 TEST_TARGET := $(BIN_PATH)/$(TEST_TARGET_NAME)
 SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c*)))
@@ -28,7 +28,7 @@ $(TARGET): $(OBJ)
 
 .PHONY: test
 test: makedir $(TEST_TARGET)
-	@echo "Running tests..." && ./$(TEST_TARGET)
+	ls bin && echo "Running tests... $(TEST_TARGET)" && ./$(TEST_TARGET)
 
 $(TEST_TARGET): $(OBJ_TEST)
 	$(CXX) $(CXXFLAGS) -o $@ $^
