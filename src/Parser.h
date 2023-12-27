@@ -83,6 +83,22 @@ class Parser {
   AstNode *DoWhileStatement();
 
   /**
+   * ForStatement
+   *  : 'for' '(' OptForStatementInit ';' OptExpression ';' OptExpression ')'
+   * Statement
+   *  ;
+   */
+  AstNode *ForStatement();
+
+  /**
+   * ForStatementInit
+   *  : VariableStatementInit
+   *  | Expression
+   *  ;
+   */
+  AstNode *ForStatementInit();
+
+  /**
    * IfStatement
    *  : 'if' '(' Expression ')' Statement
    *  | 'if' '(' Expression ')' Statement 'else' Statement
@@ -91,8 +107,15 @@ class Parser {
   AstNode *IfStatement();
 
   /**
+   * VariableStatementInit
+   *  : 'let' VariableDeclarationList
+   *  ;
+   */
+  AstNode *VariableStatementInit();
+
+  /**
    * VariableStatement
-   *  : 'let' VariableDeclarationList ';'
+   *  : VariableStatementInit ';'
    *  ;
    */
   AstNode *VariableStatement();

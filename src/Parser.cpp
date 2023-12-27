@@ -60,7 +60,7 @@ AstNode *Parser::IterationStatement() {
     case TokenType::Do:
       return DoWhileStatement();
     case TokenType::For:
-      // return ForStatement();
+      return ForStatement();
     default:
       std::cerr << "Parser error: unkown IterationStatement type" << std::endl;
       throw;
@@ -94,6 +94,34 @@ AstNode *Parser::DoWhileStatement() {
   return new DoWhileStatementNode(test, body);
 }
 
+AstNode *Parser::ForStatement() {
+  _eat(TokenType::For);
+  _eat(TokenType::ParenthesesOpen);
+
+  AstNode *init =
+      _lookahead->type != TokenType::Semicolon ? ForStatementInit() : nullptr;
+  _eat(TokenType::Semicolon);
+
+  AstNode *test =
+      _lookahead->type != TokenType::Semicolon ? Expression() : nullptr;
+  _eat(TokenType::Semicolon);
+
+  AstNode *update =
+      _lookahead->type != TokenType::ParenthesesClose ? Expression() : nullptr;
+  _eat(TokenType::ParenthesesClose);
+
+  AstNode *body = Statement();
+
+  return new ForStatementNode(init, test, update, body);
+}
+
+AstNode *Parser::ForStatementInit() {
+  if (_lookahead->type == TokenType::Let) {
+    return VariableStatementInit();
+  }
+  return Expression();
+}
+
 AstNode *Parser::IfStatement() {
   _eat(TokenType::If);
 
@@ -112,11 +140,16 @@ AstNode *Parser::IfStatement() {
   return new IfStatementNode(test, consequent, alternate);
 }
 
-AstNode *Parser::VariableStatement() {
+AstNode *Parser::VariableStatementInit() {
   _eat(TokenType::Let);
   std::vector<AstNode *> declarations = VariableDeclarationList();
-  _eat(TokenType::Semicolon);
   return new VariableStatementNode(declarations);
+}
+
+AstNode *Parser::VariableStatement() {
+  AstNode *variableStatement = VariableStatementInit();
+  _eat(TokenType::Semicolon);
+  return variableStatement;
 }
 
 std::vector<AstNode *> Parser::VariableDeclarationList() {

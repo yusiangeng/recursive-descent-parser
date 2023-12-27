@@ -213,3 +213,20 @@ json DoWhileStatementNode::toJson() const {
               {"test", test->toJson()},
               {"body", body ? body->toJson() : nullptr}};
 }
+
+ForStatementNode::ForStatementNode(AstNode *init, AstNode *test,
+                                   AstNode *update, AstNode *body) {
+  type = "ForStatement";
+  this->init = init;
+  this->test = test;
+  this->update = update;
+  this->body = body;
+}
+
+json ForStatementNode::toJson() const {
+  return json{{"type", type},
+              {"init", init ? init->toJson() : nullptr},
+              {"test", test ? test->toJson() : nullptr},
+              {"update", update ? update->toJson() : nullptr},
+              {"body", body ? body->toJson() : nullptr}};
+}

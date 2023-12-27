@@ -20,3 +20,4 @@ void LogicalTest(std::function<void(std::string, json)> test);
 void UnaryTest(std::function<void(std::string, json)> test);
 void WhileTest(std::function<void(std::string, json)> test);
 void DoWhileTest(std::function<void(std::string, json)> test);
+void ForTest(std::function<void(std::string, json)> test);

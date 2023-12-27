@@ -182,3 +182,16 @@ class DoWhileStatementNode : public AstNode {
 
   json toJson() const override;
 };
+
+class ForStatementNode : public AstNode {
+ public:
+  AstNode *init;
+  AstNode *test;
+  AstNode *update;
+  AstNode *body;
+
+  ForStatementNode(AstNode *init, AstNode *test, AstNode *update,
+                   AstNode *body);
+
+  json toJson() const override;
+};
