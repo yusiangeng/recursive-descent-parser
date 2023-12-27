@@ -1,8 +1,10 @@
 ![test workflow](https://github.com/yusiangeng/recursive-descent-parser/actions/workflows/test.yaml/badge.svg)
 
+
 # Recursive Descent Parser
 
 Parser for a JavaScript-like language. Outputs a JSON abstract syntax tree (AST).
+
 
 ## Example
 
@@ -54,6 +56,7 @@ bin/parse -e '<your program>'
 bin/parse -f path/to/file
 ```
 
+
 ## Language Features
 
 - Math
@@ -86,6 +89,7 @@ bin/parse -f path/to/file
   }
   ```
 
+
 ## How to Build
 
 Run `make`. The executable will be created as `bin/parse`.
@@ -94,6 +98,8 @@ Run `make`. The executable will be created as `bin/parse`.
 ## Run automated tests
 
 Run `make test`. Tests are defined in `tests` folder.
+
+Tests are run on GitHub Actions runners using `ubuntu-latest`, `macos-latest`, and `windows-2019`.
 
 
 ## Third Party Libraries used
