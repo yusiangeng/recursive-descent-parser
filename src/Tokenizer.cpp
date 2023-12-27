@@ -13,96 +13,77 @@
  *
  * In order of precedence.
  */
-static std::vector<std::pair<std::string, TokenType>> Spec{
+std::vector<SpecItem> Spec{
     // ----------------------------------------------
     // Whitespace:
-    {"^[ \t\r\n\f]+", TokenType::IgnoreToken},
+    {"^[ \t\r\n\f]+", TokenType::IgnoreToken, "IGNORE_TOKEN"},
 
     // ----------------------------------------------
     // Comments:
 
     // Skip single-line comments:
-    {"^//.*", TokenType::IgnoreToken},
+    {"^//.*", TokenType::IgnoreToken, "IGNORE_TOKEN"},
 
     // Skip multi-line comments:
-    {"^/\\*(.|\n)*\\*/", TokenType::IgnoreToken},
+    {"^/\\*(.|\n)*\\*/", TokenType::IgnoreToken, "IGNORE_TOKEN"},
 
     // ----------------------------------------------
     // Symbols, delimiters:
-    {"^;", TokenType::Semicolon},
-    {"^\\{", TokenType::CurlyOpen},
-    {"^\\}", TokenType::CurlyClose},
-    {"^\\(", TokenType::ParenthesesOpen},
-    {"^\\)", TokenType::ParenthesesClose},
-    {"^,", TokenType::Comma},
+    {"^;", TokenType::Semicolon, ";"},
+    {"^\\{", TokenType::CurlyOpen, "{"},
+    {"^\\}", TokenType::CurlyClose, "}"},
+    {"^\\(", TokenType::ParenthesesOpen, "("},
+    {"^\\)", TokenType::ParenthesesClose, ")"},
+    {"^,", TokenType::Comma, ","},
 
     // ----------------------------------------------
     // Keywords:
-    {"^\\blet\\b", TokenType::Let},
-    {"^\\bif\\b", TokenType::If},
-    {"^\\belse\\b", TokenType::Else},
-    {"^\\btrue\\b", TokenType::True},
-    {"^\\bfalse\\b", TokenType::False},
-    {"^\\bnull\\b", TokenType::NullSymbol},
-    {"^\\bwhile\\b", TokenType::While},
-    {"^\\bdo\\b", TokenType::Do},
-    {"^\\bfor\\b", TokenType::For},
+    {"^\\blet\\b", TokenType::Let, "let"},
+    {"^\\bif\\b", TokenType::If, "if"},
+    {"^\\belse\\b", TokenType::Else, "else"},
+    {"^\\btrue\\b", TokenType::True, "true"},
+    {"^\\bfalse\\b", TokenType::False, "false"},
+    {"^\\bnull\\b", TokenType::NullSymbol, "null"},
+    {"^\\bwhile\\b", TokenType::While, "while"},
+    {"^\\bdo\\b", TokenType::Do, "do"},
+    {"^\\bfor\\b", TokenType::For, "for"},
 
     // ----------------------------------------------
     // Numbers:
-    {"^[0-9]+", TokenType::Number},
+    {"^[0-9]+", TokenType::Number, "NUMBER"},
 
     // ----------------------------------------------
     // Identifiers:
-    {"^[a-zA-Z0-9_]+", TokenType::Identifier},
+    {"^[a-zA-Z0-9_]+", TokenType::Identifier, "IDENTIFIER"},
 
     // ----------------------------------------------
     // Equality operators: ==, !=
-    {"^[=!]=", TokenType::EqualityOperator},
+    {"^[=!]=", TokenType::EqualityOperator, "EQUALITY_OPERATOR"},
 
     // ----------------------------------------------
     // Assignment operators: =, *=, /=, +=, -=
-    {"^=", TokenType::AssignSimple},
-    {"^[\\*/\\+-]=", TokenType::AssignComplex},
+    {"^=", TokenType::AssignSimple, "ASSIGN_SIMPLE"},
+    {"^[\\*/\\+-]=", TokenType::AssignComplex, "ASSIGN_COMPLEX"},
 
     // ----------------------------------------------
     // Math operators: +, -, *, /
-    {"^[+-]", TokenType::AdditiveOperator},
-    {"^[*/]", TokenType::MultiplicativeOperator},
+    {"^[+-]", TokenType::AdditiveOperator, "ADDITIVE_OPERATOR"},
+    {"^[*/]", TokenType::MultiplicativeOperator, "MULTIPLICATIVE_OPERATOR"},
 
     // ----------------------------------------------
     // Relational operators: >, >=, <, <=
-    {"^[><]=?", TokenType::RelationalOperator},
+    {"^[><]=?", TokenType::RelationalOperator, "RELATIONAL_OPERATOR"},
 
     // ----------------------------------------------
     // Logical operators: &&, ||, !
-    {"^&&", TokenType::LogicalAnd},
-    {"^\\|\\|", TokenType::LogicalOr},
-    {"^!", TokenType::LogicalNot},
+    {"^&&", TokenType::LogicalAnd, "&&"},
+    {"^\\|\\|", TokenType::LogicalOr, "||"},
+    {"^!", TokenType::LogicalNot, "!"},
 
     // ----------------------------------------------
     // Strings:
-    {"^\"[^\"]*\"", TokenType::String},
-    {"^'[^']*'", TokenType::String}};
-
-std::unordered_map<TokenType, std::string> tokenTypeStringMap{
-    {TokenType::Semicolon, ";"},
-    {TokenType::CurlyOpen, "{"},
-    {TokenType::CurlyClose, "}"},
-    {TokenType::ParenthesesOpen, "("},
-    {TokenType::ParenthesesClose, ")"},
-    {TokenType::Comma, ","},
-    {TokenType::AdditiveOperator, "ADDITIVE_OPERATOR"},
-    {TokenType::MultiplicativeOperator, "MULTIPLICATIVE_OPERATOR"},
-    {TokenType::Number, "NUMBER"},
-    {TokenType::String, "STRING"},
-    {TokenType::Identifier, "IDENTIFIER"},
-    {TokenType::AssignSimple, "SIMPLE_ASSIGN"},
-    {TokenType::AssignComplex, "COMPLEX_ASSIGN"},
-    {TokenType::Let, "let"},
-    {TokenType::If, "if"},
-    {TokenType::Else, "else"},
-    {TokenType::RelationalOperator, "RELATIONAL_OPERATOR"},
+    {"^\"[^\"]*\"", TokenType::String, "STRING"},
+    {"^'[^']*'", TokenType::String, "STRING"},
 };
 
 Token::Token(TokenType type, std::string value) {
@@ -126,8 +107,8 @@ std::optional<Token> Tokenizer::getNextToken() {
 
   std::string string = _string.substr(_cursor);
 
-  for (auto [regexStr, tokenType] : Spec) {
-    std::optional<std::string> tokenValue = _match(regexStr, string);
+  for (const auto& [regexString, tokenType, debugString] : Spec) {
+    std::optional<std::string> tokenValue = _match(regexString, string);
 
     // Couldn't match this rule, continue.
     if (!tokenValue) {

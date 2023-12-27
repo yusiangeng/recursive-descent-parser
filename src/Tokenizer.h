@@ -36,8 +36,6 @@ enum class TokenType {
   For
 };
 
-extern std::unordered_map<TokenType, std::string> tokenTypeStringMap;
-
 class Token {
  public:
   TokenType type;
@@ -45,6 +43,14 @@ class Token {
 
   Token(TokenType type, std::string value);
 };
+
+struct SpecItem {
+  std::string regexString;
+  TokenType tokenType;
+  std::string debugString;
+};
+
+extern std::vector<SpecItem> Spec;
 
 /**
  * Tokenizer class.

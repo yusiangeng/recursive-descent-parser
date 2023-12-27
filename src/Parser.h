@@ -76,6 +76,13 @@ class Parser {
   AstNode *WhileStatement();
 
   /**
+   * DoWhileStatement
+   *  : 'do' Statement 'while' '(' Expression ')' ';'
+   *  ;
+   */
+  AstNode *DoWhileStatement();
+
+  /**
    * IfStatement
    *  : 'if' '(' Expression ')' Statement
    *  | 'if' '(' Expression ')' Statement 'else' Statement

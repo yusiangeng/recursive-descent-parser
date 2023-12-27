@@ -32,7 +32,7 @@ int main() {
       tests{LiteralsTest,   StatementListTest, BlockTest,    EmptyStatementTest,
             MathTest,       AssignmentTest,    VariableTest, IfTest,
             RelationalTest, EqualityTest,      LogicalTest,  UnaryTest,
-            WhileTest};
+            WhileTest,      DoWhileTest};
 
   // Run all tests:
   for (auto testRun : tests) {

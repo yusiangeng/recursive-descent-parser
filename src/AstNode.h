@@ -172,3 +172,13 @@ class WhileStatementNode : public AstNode {
 
   json toJson() const override;
 };
+
+class DoWhileStatementNode : public AstNode {
+ public:
+  AstNode *test;
+  AstNode *body;
+
+  DoWhileStatementNode(AstNode *test, AstNode *argument);
+
+  json toJson() const override;
+};

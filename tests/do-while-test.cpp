@@ -6,13 +6,13 @@
 
 using json = nlohmann::json;
 
-void WhileTest(std::function<void(std::string, json)> test) {
+void DoWhileTest(std::function<void(std::string, json)> test) {
   test(
       R"(
 
-    while (x > 10) {
+    do {
       x -= 1;
-    }
+    } while (x > 10);
 
   )",
       {
@@ -20,7 +20,7 @@ void WhileTest(std::function<void(std::string, json)> test) {
           {
               "body",
               {{
-                  {"type", "WhileStatement"},
+                  {"type", "DoWhileStatement"},
                   {"test",
                    {
                        {"type", "BinaryExpression"},

@@ -1,6 +1,7 @@
 
 #include "Parser.h"
 
+#include <algorithm>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -57,11 +58,12 @@ AstNode *Parser::IterationStatement() {
     case TokenType::While:
       return WhileStatement();
     case TokenType::Do:
-      // return DoWhileStatement();
+      return DoWhileStatement();
     case TokenType::For:
       // return ForStatement();
     default:
-      throw "Parser error: unkown IterationStatement type";
+      std::cerr << "Parser error: unkown IterationStatement type" << std::endl;
+      throw;
   }
 }
 
@@ -74,6 +76,22 @@ AstNode *Parser::WhileStatement() {
 
   AstNode *body = Statement();
   return new WhileStatementNode(test, body);
+}
+
+AstNode *Parser::DoWhileStatement() {
+  _eat(TokenType::Do);
+
+  AstNode *body = Statement();
+
+  _eat(TokenType::While);
+
+  _eat(TokenType::ParenthesesOpen);
+  AstNode *test = Expression();
+  _eat(TokenType::ParenthesesClose);
+
+  _eat(TokenType::Semicolon);
+
+  return new DoWhileStatementNode(test, body);
 }
 
 AstNode *Parser::IfStatement() {
@@ -352,15 +370,17 @@ void to_json(json &j, const Ast &parseResult) {
 Token Parser::_eat(TokenType tokenType) {
   std::optional<Token> token = _lookahead;
 
-  if (!token) {
-    throw SyntaxError("Unexpected end of input, expected: \"" +
-                      tokenTypeStringMap[tokenType] + "\"");
-  }
+  if (!token || token->type != tokenType) {
+    std::string errorMessage =
+        !token ? "Unexpected end of input"
+               : "Unexpected token: \"" + token->value + "\"";
 
-  if (token->type != tokenType) {
-    throw SyntaxError("Unexpected token: \"" + token->value +
-                      "\", expected: \"" + tokenTypeStringMap[tokenType] +
-                      "\"");
+    auto itr = std::find_if(Spec.begin(), Spec.end(),
+                            [tokenType](const SpecItem &specItem) {
+                              return specItem.tokenType == tokenType;
+                            });
+    errorMessage += ", expected: \"" + itr->debugString + "\"";
+    throw SyntaxError(errorMessage);
   }
 
   // Advance to next token.

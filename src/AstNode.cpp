@@ -201,3 +201,15 @@ json WhileStatementNode::toJson() const {
               {"test", test->toJson()},
               {"body", body ? body->toJson() : nullptr}};
 }
+
+DoWhileStatementNode::DoWhileStatementNode(AstNode *test, AstNode *body) {
+  type = "DoWhileStatement";
+  this->test = test;
+  this->body = body;
+}
+
+json DoWhileStatementNode::toJson() const {
+  return json{{"type", type},
+              {"test", test->toJson()},
+              {"body", body ? body->toJson() : nullptr}};
+}
