@@ -44,6 +44,9 @@ static std::vector<std::pair<std::string, TokenType>> Spec{
     {"^\\btrue\\b", TokenType::True},
     {"^\\bfalse\\b", TokenType::False},
     {"^\\bnull\\b", TokenType::NullSymbol},
+    {"^\\bwhile\\b", TokenType::While},
+    {"^\\bdo\\b", TokenType::Do},
+    {"^\\bfor\\b", TokenType::For},
 
     // ----------------------------------------------
     // Numbers:

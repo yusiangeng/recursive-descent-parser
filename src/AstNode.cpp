@@ -189,3 +189,15 @@ json UnaryExpressionNode::toJson() const {
   return json{
       {"type", type}, {"operator", op}, {"argument", argument->toJson()}};
 }
+
+WhileStatementNode::WhileStatementNode(AstNode *test, AstNode *body) {
+  type = "WhileStatement";
+  this->test = test;
+  this->body = body;
+}
+
+json WhileStatementNode::toJson() const {
+  return json{{"type", type},
+              {"test", test->toJson()},
+              {"body", body ? body->toJson() : nullptr}};
+}

@@ -43,9 +43,37 @@ AstNode *Parser::Statement() {
       return BlockStatement();
     case TokenType::Let:
       return VariableStatement();
+    case TokenType::While:
+    case TokenType::Do:
+    case TokenType::For:
+      return IterationStatement();
     default:
       return ExpressionStatement();
   }
+}
+
+AstNode *Parser::IterationStatement() {
+  switch (_lookahead->type) {
+    case TokenType::While:
+      return WhileStatement();
+    case TokenType::Do:
+      // return DoWhileStatement();
+    case TokenType::For:
+      // return ForStatement();
+    default:
+      throw "Parser error: unkown IterationStatement type";
+  }
+}
+
+AstNode *Parser::WhileStatement() {
+  _eat(TokenType::While);
+
+  _eat(TokenType::ParenthesesOpen);
+  AstNode *test = Expression();
+  _eat(TokenType::ParenthesesClose);
+
+  AstNode *body = Statement();
+  return new WhileStatementNode(test, body);
 }
 
 AstNode *Parser::IfStatement() {

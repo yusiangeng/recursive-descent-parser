@@ -162,3 +162,13 @@ class UnaryExpressionNode : public AstNode {
 
   json toJson() const override;
 };
+
+class WhileStatementNode : public AstNode {
+ public:
+  AstNode *test;
+  AstNode *body;
+
+  WhileStatementNode(AstNode *test, AstNode *argument);
+
+  json toJson() const override;
+};

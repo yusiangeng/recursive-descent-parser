@@ -18,3 +18,4 @@ void RelationalTest(std::function<void(std::string, json)> test);
 void EqualityTest(std::function<void(std::string, json)> test);
 void LogicalTest(std::function<void(std::string, json)> test);
 void UnaryTest(std::function<void(std::string, json)> test);
+void WhileTest(std::function<void(std::string, json)> test);

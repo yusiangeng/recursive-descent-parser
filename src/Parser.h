@@ -54,9 +54,26 @@ class Parser {
    *  | EmptyStatement
    *  | VariableStatement
    *  | IfStatement
+   *  | IterationStatement
    *  ;
    */
   AstNode *Statement();
+
+  /**
+   * IterationStatement
+   *  : WhileStatement
+   *  | DoWhileStatement
+   *  | ForStatement
+   *  ;
+   */
+  AstNode *IterationStatement();
+
+  /**
+   * WhileStatement
+   *  : 'while' '(' Expression ')' Statement
+   *  ;
+   */
+  AstNode *WhileStatement();
 
   /**
    * IfStatement
@@ -224,7 +241,7 @@ class Parser {
   AstNode *MultiplicativeExpression();
 
   /**
-   * UnaryExpression 
+   * UnaryExpression
    *  : LeftHandSideExpression
    *  | ADDITIVE_OPERATOR UnaryExpression
    *  | LOGICAL_NOT UnaryExpression
