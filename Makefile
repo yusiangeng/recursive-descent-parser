@@ -28,7 +28,7 @@ $(TARGET): $(OBJ)
 
 .PHONY: test
 test: makedir $(TEST_TARGET)
-	ls bin && echo "Running tests... $(TEST_TARGET)" && $(TEST_TARGET)
+	ls bin && echo "Running tests..." && chmod +x $(TEST_TARGET) && $(TEST_TARGET)
 
 $(TEST_TARGET): $(OBJ_TEST)
 	$(CXX) $(CXXFLAGS) -o $@ $^
