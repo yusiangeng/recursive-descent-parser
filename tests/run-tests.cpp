@@ -12,6 +12,7 @@
 
 using json = nlohmann::json;
 
+// Our parser implementation.
 Parser parser;
 
 /**
@@ -34,7 +35,7 @@ int main() {
             RelationalTest, EqualityTest,      LogicalTest,  UnaryTest,
             WhileTest,      DoWhileTest,       ForTest};
 
-  // Run all tests:
+  // Run all tests
   for (auto testRun : tests) {
     testRun(test);
   }

@@ -21,5 +21,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Run tests using make
-        run: make test
+      - name: Build using CMake
+        run: mkdir build && cd build && cmake .. && make
+
+      - name: Run tests 
+        run: ./run-tests

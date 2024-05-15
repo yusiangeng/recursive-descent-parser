@@ -9,7 +9,7 @@ Parser for a JavaScript-like language. Outputs a JSON abstract syntax tree (AST)
 ## Example
 
 ```bash
-bin/parse -e 'let x = 2 + 3;'
+./parse -e 'let x = 2 + 3;'
 ```
 
 Output:
@@ -50,10 +50,10 @@ Output:
 
 ```bash
 # Enter your program inline
-bin/parse -e '<your program>'
+./parse -e '<your program>'
 
 # Read your program from a file
-bin/parse -f path/to/file
+./parse -f path/to/file
 ```
 
 
@@ -108,14 +108,19 @@ bin/parse -f path/to/file
 
 ## How to Build
 
-Run `make`. The executable will be created in path `bin/parse`.
+This project uses CMake.
+
+```bash
+mkdir build && cd build && cmake .. && make
+```
+The executable created is `build/parse`.
 
 
 ## Run automated tests
 
-Run `make test`. Tests are defined in `tests` folder.
+Run `build/run-tests`. Tests are defined in `tests` folder.
 
-Tests are run on GitHub Actions runners using `ubuntu-latest`, `macos-latest`, and `windows-2019`.
+Tests are also run on GitHub Actions runners using `ubuntu-latest`, `macos-latest`, and `windows-2019`.
 
 
 ## Third Party Libraries used
