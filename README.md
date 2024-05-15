@@ -1,4 +1,5 @@
-![test workflow](https://github.com/yusiangeng/recursive-descent-parser/actions/workflows/test.yaml/badge.svg)
+![test workflow](https://github.com/yusiangeng/recursive-descent-parser/actions/workflows/test-ubuntu.yaml/badge.svg)
+![test workflow](https://github.com/yusiangeng/recursive-descent-parser/actions/workflows/test-macos.yaml/badge.svg)
 
 
 # Recursive Descent Parser
