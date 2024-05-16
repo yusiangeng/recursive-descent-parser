@@ -121,7 +121,7 @@ The executable created is `build/parse`.
 
 Run `build/run-tests`. Tests are defined in `tests` folder.
 
-Tests are also run on GitHub Actions runners using `ubuntu-latest`, `macos-latest`, and `windows-2019`.
+Tests are also run on GitHub Actions runners using `ubuntu-22.04` and `macos-14`.
 
 
 ## Third Party Libraries used
