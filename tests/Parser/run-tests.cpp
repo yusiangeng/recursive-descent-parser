@@ -1,13 +1,9 @@
-/**
- * Main test runner.
- */
-
 #include <iostream>
+#include <json.hpp>
 #include <string>
 #include <vector>
 
-#include "../lib/nlohmann/json.hpp"
-#include "../src/Parser.h"
+#include "../../src/Parser.h"
 #include "tests.h"
 
 using json = nlohmann::json;
@@ -15,9 +11,6 @@ using json = nlohmann::json;
 // Our parser implementation.
 Parser parser;
 
-/**
- * Test function.
- */
 void test(std::string program, json expected) {
   Ast ast = parser.parse(program);
   json result = ast;

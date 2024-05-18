@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "SyntaxError.h"
+#include "Error.h"
 
 /**
  * Tokenizer spec.
@@ -131,7 +131,7 @@ std::optional<std::string> Tokenizer::_match(std::string regexpStr,
                                              std::string string) {
   std::smatch match;
   if (std::regex_search(string, match, std::regex(regexpStr))) {
-    _cursor += match[0].length();
+    _cursor += static_cast<size_t>(match[0].length());
     return match[0];
   }
   return {};

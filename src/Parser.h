@@ -1,4 +1,5 @@
 #pragma once
+
 #include <optional>
 #include <string>
 
@@ -190,11 +191,13 @@ class Parser {
    *  : IDENTIFIER
    *  ;
    */
-  AstNode *Identifier();
+  IdentifierNode *Identifier();
 
   /**
+   * =, +=, -=, *=, /=
+   * 
    * AssignmentOperator
-   *  : SIMPLE_ASSIGN
+   *  : SIMPLE_ASSIGN 
    *  | COMPLEX_ASSIGN
    *  ;
    */

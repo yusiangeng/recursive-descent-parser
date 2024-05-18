@@ -1,8 +1,14 @@
+
 #include "AstNode.h"
 
+#include <json.hpp>
+#include <sstream>
+#include <string>
+#include <unordered_set>
 #include <vector>
 
-#include "../lib/nlohmann/json.hpp"
+#include "Error.h"
+#include "EvalValue.h"
 
 using json = nlohmann::json;
 
@@ -54,6 +60,11 @@ json StringLiteralNode::toJson() const {
   return json{{"type", type}, {"value", value}};
 }
 
+EvalValue *StringLiteralNode::eval(Environment &env) const {
+  UNUSED(env);
+  return new EvalString(value);
+}
+
 NumericLiteralNode::NumericLiteralNode(long long value) {
   type = "NumericLiteral";
   this->value = value;
@@ -61,6 +72,11 @@ NumericLiteralNode::NumericLiteralNode(long long value) {
 
 json NumericLiteralNode::toJson() const {
   return json{{"type", type}, {"value", value}};
+}
+
+EvalValue *NumericLiteralNode::eval(Environment &env) const {
+  UNUSED(env);
+  return new EvalNumber(value);
 }
 
 BinaryExpressionNode::BinaryExpressionNode(std::string op, AstNode *left,
@@ -76,6 +92,65 @@ json BinaryExpressionNode::toJson() const {
               {"operator", op},
               {"left", left->toJson()},
               {"right", right->toJson()}};
+}
+
+EvalValue *BinaryExpressionNode::eval(Environment &env) const {
+  if (std::unordered_set<std::string>{"+", "-", "*", "/", "==", "!=", "<",
+                                      "<=", ">", ">="}
+          .count(op)) {
+    EvalValue *leftValue = left->eval(env);
+    long long leftNumber;
+    if (auto *leftValueNumber = dynamic_cast<EvalNumber *>(leftValue)) {
+      leftNumber = leftValueNumber->getValue();
+    } else if (auto *leftValueBool = dynamic_cast<EvalBool *>(leftValue)) {
+      leftNumber = leftValueBool->getValue();
+    } else {
+      std::stringstream ss;
+      ss << "Left hand side of operation " << op
+         << " is not a number or boolean: " << leftValue->typeStr() << ": "
+         << leftValue->str();
+      throw TypeError(ss.str());
+    }
+
+    EvalValue *rightValue = right->eval(env);
+    long long rightNumber;
+    if (auto *rightValueNumber = dynamic_cast<EvalNumber *>(rightValue)) {
+      rightNumber = rightValueNumber->getValue();
+    } else if (auto *rightValueBool = dynamic_cast<EvalBool *>(rightValue)) {
+      rightNumber = rightValueBool->getValue();
+    } else {
+      std::stringstream ss;
+      ss << "Right hand side of operation " << op
+         << " is not a number or boolean: " << rightValue->typeStr() << ": "
+         << rightValue->str();
+      throw TypeError(ss.str());
+    }
+
+    if (op == "+") {
+      return new EvalNumber(leftNumber + rightNumber);
+    } else if (op == "-") {
+      return new EvalNumber(leftNumber - rightNumber);
+    } else if (op == "*") {
+      return new EvalNumber(leftNumber * rightNumber);
+    } else if (op == "/") {
+      return new EvalNumber(leftNumber / rightNumber);
+    } else if (op == "==") {
+      return new EvalBool(leftNumber == rightNumber);
+    } else if (op == "!=") {
+      return new EvalBool(leftNumber != rightNumber);
+    } else if (op == "<") {
+      return new EvalBool(leftNumber < rightNumber);
+    } else if (op == "<=") {
+      return new EvalBool(leftNumber <= rightNumber);
+    } else if (op == ">") {
+      return new EvalBool(leftNumber > rightNumber);
+    } else if (op == ">=") {
+      return new EvalBool(leftNumber >= rightNumber);
+    }
+  }
+  std::stringstream ss;
+  ss << "Unsupported operator " << op << " for Binary Expression";
+  throw std::runtime_error(ss.str());
 }
 
 AssignmentExpressionNode::AssignmentExpressionNode(std::string op,
@@ -106,6 +181,10 @@ json IdentifierNode::toJson() const {
   };
 }
 
+EvalValue *IdentifierNode::eval(Environment &env) const {
+  return env.lookup(name);
+}
+
 VariableStatementNode::VariableStatementNode(
     std::vector<AstNode *> declarations) {
   type = "VariableStatement";
@@ -123,7 +202,15 @@ json VariableStatementNode::toJson() const {
   };
 }
 
-VariableDeclarationNode::VariableDeclarationNode(AstNode *id, AstNode *init) {
+EvalValue *VariableStatementNode::eval(Environment &env) const {
+  for (const AstNode *declaration : declarations) {
+    declaration->eval(env);
+  }
+  return new EvalUndefined();
+}
+
+VariableDeclarationNode::VariableDeclarationNode(IdentifierNode *id,
+                                                 AstNode *init) {
   type = "VariableDeclaration";
   this->id = id;
   this->init = init;
@@ -133,6 +220,11 @@ json VariableDeclarationNode::toJson() const {
   return json{{"type", type},
               {"id", id->toJson()},
               {"init", init ? init->toJson() : nullptr}};
+}
+
+EvalValue *VariableDeclarationNode::eval(Environment &env) const {
+  env.define(id->name, init->eval(env));
+  return new EvalUndefined();
 }
 
 IfStatementNode::IfStatementNode(AstNode *test, AstNode *consequent,
@@ -158,10 +250,20 @@ json BooleanLiteralNode::toJson() const {
   return json{{"type", type}, {"value", value}};
 }
 
+EvalValue *BooleanLiteralNode::eval(Environment &env) const {
+  UNUSED(env);
+  return new EvalBool(value);
+}
+
 NullLiteralNode::NullLiteralNode() { type = "NullLiteral"; }
 
 json NullLiteralNode::toJson() const {
   return json{{"type", type}, {"value", nullptr}};
+}
+
+EvalValue *NullLiteralNode::eval(Environment &env) const {
+  UNUSED(env);
+  return new EvalNull();
 }
 
 LogicalExpressionNode::LogicalExpressionNode(std::string op, AstNode *left,

@@ -1,8 +1,13 @@
 #pragma once
+
+#define UNUSED(expr) (void)(expr)
+
+#include <json.hpp>
 #include <string>
 #include <vector>
 
-#include "../lib/nlohmann/json.hpp"
+#include "Environment.h"
+#include "EvalValue.h"
 
 using json = nlohmann::json;
 
@@ -11,6 +16,11 @@ class AstNode {
   std::string type;
 
   virtual json toJson() const = 0;
+
+  virtual EvalValue *eval(Environment &env) const {
+    UNUSED(env);
+    throw std::runtime_error("eval() unimplemented");
+  };
 };
 
 class ProgramNode : public AstNode {
@@ -54,6 +64,7 @@ class StringLiteralNode : public AstNode {
   StringLiteralNode(std::string value);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class NumericLiteralNode : public AstNode {
@@ -63,6 +74,7 @@ class NumericLiteralNode : public AstNode {
   NumericLiteralNode(long long value);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class BinaryExpressionNode : public AstNode {
@@ -74,6 +86,7 @@ class BinaryExpressionNode : public AstNode {
   BinaryExpressionNode(std::string op, AstNode *left, AstNode *right);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class AssignmentExpressionNode : public AstNode {
@@ -94,6 +107,7 @@ class IdentifierNode : public AstNode {
   IdentifierNode(std::string name);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class VariableStatementNode : public AstNode {
@@ -103,16 +117,18 @@ class VariableStatementNode : public AstNode {
   VariableStatementNode(std::vector<AstNode *> declarations);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class VariableDeclarationNode : public AstNode {
  public:
-  AstNode *id;
+  IdentifierNode *id;
   AstNode *init;  // nullptr if variable not initialized
 
-  VariableDeclarationNode(AstNode *id, AstNode *init);
+  VariableDeclarationNode(IdentifierNode *id, AstNode *init);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class IfStatementNode : public AstNode {
@@ -133,6 +149,7 @@ class BooleanLiteralNode : public AstNode {
   BooleanLiteralNode(bool value);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class NullLiteralNode : public AstNode {
@@ -140,6 +157,7 @@ class NullLiteralNode : public AstNode {
   NullLiteralNode();
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class LogicalExpressionNode : public AstNode {

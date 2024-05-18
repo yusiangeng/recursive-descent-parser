@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "AstNode.h"
-#include "SyntaxError.h"
+#include "Error.h"
 #include "Tokenizer.h"
 
 Ast Parser::parse(std::string str) {
@@ -165,7 +165,7 @@ std::vector<AstNode *> Parser::VariableDeclarationList() {
 }
 
 AstNode *Parser::VariableDeclaration() {
-  AstNode *id = Identifier();
+  IdentifierNode *id = Identifier();
 
   // OptVariableInitializer
   AstNode *init = _lookahead->type != TokenType::Semicolon &&
@@ -222,7 +222,7 @@ AstNode *Parser::AssignmentExpression() {
 
 AstNode *Parser::LeftHandSideExpression() { return PrimaryExpression(); }
 
-AstNode *Parser::Identifier() {
+IdentifierNode *Parser::Identifier() {
   std::string name = _eat(TokenType::Identifier).value;
   return new IdentifierNode(name);
 }

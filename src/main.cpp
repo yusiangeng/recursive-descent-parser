@@ -1,10 +1,9 @@
 #include <fstream>
 #include <iostream>
+#include <json.hpp>
 #include <string>
 
-#include "../lib/nlohmann/json.hpp"
 #include "Parser.h"
-#include "SyntaxError.h"
 
 using json = nlohmann::json;
 
@@ -40,12 +39,7 @@ int main(int argc, char *argv[]) {
 
   Parser parser;
   Ast ast;
-  try {
-    ast = parser.parse(program);
-  } catch (SyntaxError e) {
-    std::cout << "SyntaxError: " << e.getMsg() << std::endl;
-    return 1;
-  }
+  ast = parser.parse(program);
 
   json j = ast;
   std::cout << j.dump(2) << std::endl;

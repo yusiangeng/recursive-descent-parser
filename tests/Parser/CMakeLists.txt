@@ -1,5 +1,5 @@
 add_executable(
-  run-tests
+  run-parser-tests
   run-tests.cpp
   assignment-test.cpp
   block-test.cpp
@@ -17,4 +17,4 @@ add_executable(
   variable-test.cpp
   while-test.cpp)
 
-target_link_libraries(run-tests Parser)
+target_link_libraries(run-parser-tests Parser)
