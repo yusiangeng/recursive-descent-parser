@@ -16,5 +16,5 @@ jobs:
         run: mkdir build && cd build && cmake .. && make
 
       - name: Run tests 
-        run: build/run-tests
+        run: build/run-parser-tests && build/run-evaluator-tests
 
