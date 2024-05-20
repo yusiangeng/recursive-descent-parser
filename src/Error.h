@@ -1,3 +1,7 @@
+/*
+ * User-facing errors.
+ */
+
 #pragma once
 
 #include <iostream>
@@ -26,4 +30,10 @@ class ReferenceError : public EvalError {
 class TypeError : public EvalError {
  public:
   TypeError(const std::string& msg = "") : EvalError("TypeError: " + msg) {}
+};
+
+class DivideZeroError : public EvalError {
+ public:
+  DivideZeroError(const std::string& msg = "")
+      : EvalError("DivideZeroError: " + msg) {}
 };

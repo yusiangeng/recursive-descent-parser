@@ -133,6 +133,10 @@ int main() {
       new NumericLiteralNode(4));
   CHECK_NUMBER(evaluator.eval(node), 24);
 
+  node = new BinaryExpressionNode("/", new NumericLiteralNode(93),
+                                  new NumericLiteralNode(0));
+  CHECK_EVAL_ERROR(evaluator, node, DivideZeroError);
+
   node = new BinaryExpressionNode("-", new NumericLiteralNode(93),
                                   new NumericLiteralNode(4));
   CHECK_NUMBER(evaluator.eval(node), 89);
@@ -206,6 +210,10 @@ int main() {
   node = new AssignmentExpressionNode("=", new IdentifierNode("x"),
                                       new NumericLiteralNode(0));
   CHECK_NUMBER(evaluator.eval(node), 0);
+
+  node = new AssignmentExpressionNode("/=", new IdentifierNode("x"),
+                                      new NumericLiteralNode(0));
+  CHECK_EVAL_ERROR(evaluator, node, DivideZeroError);
 
   // BlockStatement
   node = new BlockStatementNode(

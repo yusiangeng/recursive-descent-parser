@@ -150,6 +150,12 @@ EvalValue *BinaryExpressionNode::eval(Environment &env) const {
     throw TypeError(ss.str());
   }
 
+  if (op == "/" && rightNumber == 0) {
+    std::stringstream ss;
+    ss << "Cannot divide " << leftNumber << " by zero";
+    throw DivideZeroError(ss.str());
+  }
+
   if (op == "+")
     return new EvalNumber(leftNumber + rightNumber);
   else if (op == "-")
@@ -236,6 +242,12 @@ EvalValue *AssignmentExpressionNode::eval(Environment &env) const {
        << " is not a number or boolean: " << rightValue->typeStr() << ": "
        << rightValue->str();
     throw TypeError(ss.str());
+  }
+
+  if (op == "/=" && rightNumber == 0) {
+    std::stringstream ss;
+    ss << "Cannot divide " << leftNumber << " by zero";
+    throw DivideZeroError(ss.str());
   }
 
   if (op == "+=")
