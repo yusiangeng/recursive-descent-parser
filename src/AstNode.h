@@ -37,6 +37,7 @@ class EmptyStatementNode : public AstNode {
   EmptyStatementNode();
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class BlockStatementNode : public AstNode {
@@ -46,6 +47,7 @@ class BlockStatementNode : public AstNode {
   BlockStatementNode(std::vector<AstNode *> body);
 
   json toJson() const override;
+  // virtual EvalValue *eval(Environment &env) const override;
 };
 
 class ExpressionStatementNode : public AstNode {
@@ -55,6 +57,7 @@ class ExpressionStatementNode : public AstNode {
   ExpressionStatementNode(AstNode *expression);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class StringLiteralNode : public AstNode {
@@ -169,6 +172,7 @@ class LogicalExpressionNode : public AstNode {
   LogicalExpressionNode(std::string op, AstNode *left, AstNode *right);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class UnaryExpressionNode : public AstNode {

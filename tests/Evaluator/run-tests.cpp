@@ -101,6 +101,10 @@ int main() {
   node = new BooleanLiteralNode(false);
   checkBool(evaluator.eval(node), false);
 
+  // EmptyStatement
+  node = new EmptyStatementNode();
+  checkUndefined(evaluator.eval(node));
+
   // BinaryExpression: math
   node = new BinaryExpressionNode(
       "*",
@@ -138,6 +142,15 @@ int main() {
                                   new NumericLiteralNode(3));
   checkBool(evaluator.eval(node), true);
 
+  // LogicalExpression
+  node = new LogicalExpressionNode("||", new BooleanLiteralNode(false),
+                                   new BooleanLiteralNode(true));
+  checkBool(evaluator.eval(node), true);
+
+  node = new LogicalExpressionNode("&&", new BooleanLiteralNode(false),
+                                   new BooleanLiteralNode(true));
+  checkBool(evaluator.eval(node), false);
+
   // variable declaration and access
   node = new VariableStatementNode({new VariableDeclarationNode(
       new IdentifierNode("x"), new NumericLiteralNode(56))});
@@ -157,5 +170,13 @@ int main() {
 
   node = new IdentifierNode("z");
   checkNumber(evaluator.eval(node), 57);
+
+  // ExpressionStatement
+  node = new ExpressionStatementNode(new NumericLiteralNode(77));
+  checkNumber(evaluator.eval(node), 77);
+
+  node = new ExpressionStatementNode(new IdentifierNode("z"));
+  checkNumber(evaluator.eval(node), 57);
+
   std::cout << "All assertions passed!" << std::endl;
 }
