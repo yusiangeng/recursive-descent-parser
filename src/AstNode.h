@@ -30,6 +30,7 @@ class ProgramNode : public AstNode {
   ProgramNode(std::vector<AstNode *> body);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class EmptyStatementNode : public AstNode {

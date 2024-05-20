@@ -250,6 +250,20 @@ int main() {
   node = new BlockStatementNode(
       {new VariableStatementNode({new VariableDeclarationNode(
            new IdentifierNode("x"), new NumericLiteralNode(10))}),
+       new AssignmentExpressionNode("=", new IdentifierNode("x"),
+                                    new NumericLiteralNode(20))});
+  CHECK_NUMBER(evaluator.eval(node), 20);
+
+  node = new BlockStatementNode(
+      {new VariableStatementNode({new VariableDeclarationNode(
+           new IdentifierNode("x"), new NumericLiteralNode(10))}),
+       new AssignmentExpressionNode("=", new IdentifierNode("x"),
+                                    new StringLiteralNode("hi"))});
+  CHECK_STRING(evaluator.eval(node), "hi");
+
+  node = new BlockStatementNode(
+      {new VariableStatementNode({new VariableDeclarationNode(
+           new IdentifierNode("x"), new NumericLiteralNode(10))}),
        new VariableStatementNode({new VariableDeclarationNode(
            new IdentifierNode("y"), new NumericLiteralNode(20))}),
        new BinaryExpressionNode(
@@ -259,6 +273,7 @@ int main() {
            new NumericLiteralNode(30))});
   CHECK_NUMBER(evaluator.eval(node), 230);
 
+  // BlockStatement: nested scope
   node = new BlockStatementNode(
       {new VariableStatementNode({new VariableDeclarationNode(
            new IdentifierNode("x"), new NumericLiteralNode(10))}),
@@ -289,6 +304,23 @@ int main() {
   CHECK_NUMBER(evaluator.eval(node), 20);
 
   node = new BlockStatementNode(
+      {new VariableStatementNode({new VariableDeclarationNode(
+           new IdentifierNode("data"), new NumericLiteralNode(10))}),
+       new BlockStatementNode({
+           new AssignmentExpressionNode("=", new IdentifierNode("data"),
+                                        new NumericLiteralNode(100)),
+       }),
+       new ExpressionStatementNode(new IdentifierNode("data"))});
+  CHECK_NUMBER(evaluator.eval(node), 100);
+
+  // ProgramNode
+  node = new ProgramNode(
+      {new EmptyStatementNode(),
+       new ExpressionStatementNode(new NumericLiteralNode(47)),
+       new ExpressionStatementNode(new StringLiteralNode("foo"))});
+  CHECK_STRING(evaluator.eval(node), "foo");
+
+  node = new ProgramNode(
       {new VariableStatementNode({new VariableDeclarationNode(
            new IdentifierNode("data"), new NumericLiteralNode(10))}),
        new BlockStatementNode({

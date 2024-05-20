@@ -26,6 +26,14 @@ json ProgramNode::toJson() const {
   return json{{"type", type}, {"body", bodyJson}};
 }
 
+EvalValue *ProgramNode::eval(Environment &env) const {
+  EvalValue *result = nullptr;
+  for (const AstNode *statement : body) {
+    result = statement->eval(env);
+  }
+  return result;
+}
+
 EmptyStatementNode::EmptyStatementNode() { type = "EmptyStatement"; }
 
 json EmptyStatementNode::toJson() const { return json{{"type", type}}; }
