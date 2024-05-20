@@ -185,6 +185,7 @@ class UnaryExpressionNode : public AstNode {
   UnaryExpressionNode(std::string op, AstNode *argument);
 
   json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class WhileStatementNode : public AstNode {

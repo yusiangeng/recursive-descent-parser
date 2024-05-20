@@ -16,7 +16,7 @@ class SyntaxError : public std::runtime_error {
 };
 
 // below errors are for AST interpreter
-class EvalError : public std::runtime_error {
+class EvalError : public std::runtime_error {  // TODO: remove this class
  protected:
   EvalError(const std::string& msg = "") : std::runtime_error(msg) {}
 };

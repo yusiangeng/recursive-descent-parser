@@ -408,6 +408,35 @@ json UnaryExpressionNode::toJson() const {
       {"type", type}, {"operator", op}, {"argument", argument->toJson()}};
 }
 
+EvalValue *UnaryExpressionNode::eval(Environment &env) const {
+  if (!std::unordered_set<std::string>{"!", "+", "-"}.count(op)) {
+    std::stringstream ss;
+    ss << "Unsupported operator " << op << " for Unary Expression";
+    throw std::runtime_error(ss.str());
+  }
+
+  EvalValue *argValue = argument->eval(env);
+  long long argNumber;
+  if (auto *argValueNumber = dynamic_cast<EvalNumber *>(argValue)) {
+    argNumber = argValueNumber->getValue();
+  } else if (auto *argValueBool = dynamic_cast<EvalBool *>(argValue)) {
+    argNumber = argValueBool->getValue();
+  } else {
+    std::stringstream ss;
+    ss << "Left hand side of operation " << op
+       << " is not a number or boolean: " << argValue->typeStr() << ": "
+       << argValue->str();
+    throw TypeError(ss.str());
+  }
+
+  if (op == "!")
+    return new EvalBool(!argNumber);
+  else if (op == "+")
+    return new EvalNumber(argNumber);
+  else
+    return new EvalNumber(-argNumber);
+}
+
 WhileStatementNode::WhileStatementNode(AstNode *test, AstNode *body) {
   type = "WhileStatement";
   this->test = test;

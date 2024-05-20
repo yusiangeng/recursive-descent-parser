@@ -112,11 +112,17 @@ int main() {
   AstNode* node = new NumericLiteralNode(431);
   CHECK_NUMBER(evaluator.eval(node), 431);
 
+  node = new NumericLiteralNode(-10000);
+  CHECK_NUMBER(evaluator.eval(node), -10000);
+
   node = new StringLiteralNode("  Hello hi   haha!");
   CHECK_STRING(evaluator.eval(node), "  Hello hi   haha!");
 
   node = new NullLiteralNode();
   CHECK_NULL(evaluator.eval(node));
+
+  node = new BooleanLiteralNode(true);
+  CHECK_BOOL(evaluator.eval(node), true);
 
   node = new BooleanLiteralNode(false);
   CHECK_BOOL(evaluator.eval(node), false);
@@ -124,6 +130,31 @@ int main() {
   // EmptyStatement
   node = new EmptyStatementNode();
   CHECK_UNDEFINED(evaluator.eval(node));
+
+  // UnaryExpression
+  node = new UnaryExpressionNode("-", new NumericLiteralNode(1));
+  CHECK_NUMBER(evaluator.eval(node), -1);
+
+  node = new UnaryExpressionNode("+", new NumericLiteralNode(-1));
+  CHECK_NUMBER(evaluator.eval(node), -1);
+
+  node = new UnaryExpressionNode("!", new BooleanLiteralNode(true));
+  CHECK_BOOL(evaluator.eval(node), false);
+
+  node = new UnaryExpressionNode("!", new BooleanLiteralNode(false));
+  CHECK_BOOL(evaluator.eval(node), true);
+
+  node = new UnaryExpressionNode("!", new NumericLiteralNode(1));
+  CHECK_BOOL(evaluator.eval(node), false);
+
+  node = new UnaryExpressionNode("!", new NumericLiteralNode(0));
+  CHECK_BOOL(evaluator.eval(node), true);
+
+  node = new UnaryExpressionNode("!", new NumericLiteralNode(2));
+  CHECK_BOOL(evaluator.eval(node), false);
+
+  node = new UnaryExpressionNode("!", new NumericLiteralNode(-1));
+  CHECK_BOOL(evaluator.eval(node), false);
 
   // BinaryExpression: math
   node = new BinaryExpressionNode(
