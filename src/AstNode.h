@@ -47,7 +47,7 @@ class BlockStatementNode : public AstNode {
   BlockStatementNode(std::vector<AstNode *> body);
 
   json toJson() const override;
-  // virtual EvalValue *eval(Environment &env) const override;
+  virtual EvalValue *eval(Environment &env) const override;
 };
 
 class ExpressionStatementNode : public AstNode {
@@ -92,22 +92,24 @@ class BinaryExpressionNode : public AstNode {
   virtual EvalValue *eval(Environment &env) const override;
 };
 
-class AssignmentExpressionNode : public AstNode {
- public:
-  std::string op;
-  AstNode *left;
-  AstNode *right;
-
-  AssignmentExpressionNode(std::string op, AstNode *left, AstNode *right);
-
-  json toJson() const override;
-};
-
 class IdentifierNode : public AstNode {
  public:
   std::string name;
 
   IdentifierNode(std::string name);
+
+  json toJson() const override;
+  virtual EvalValue *eval(Environment &env) const override;
+};
+
+class AssignmentExpressionNode : public AstNode {
+ public:
+  std::string op;
+  IdentifierNode *left;
+  AstNode *right;
+
+  AssignmentExpressionNode(std::string op, IdentifierNode *left,
+                           AstNode *right);
 
   json toJson() const override;
   virtual EvalValue *eval(Environment &env) const override;

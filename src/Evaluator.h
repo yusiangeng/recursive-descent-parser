@@ -7,10 +7,9 @@
 
 class Evaluator {
  public:
-  Evaluator(Environment global = Environment()) : global(global) {}
+  Evaluator(Environment global = Environment(nullptr)) : global(global) {}
 
   EvalValue* eval(AstNode* node) { return eval(node, global); }
-
   EvalValue* eval(AstNode* node, Environment& env) { return node->eval(env); }
 
  private:

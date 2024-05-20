@@ -348,15 +348,15 @@ class Parser {
   bool _isAssignmentOperator(TokenType tokenType);
 
   /**
-   *  Generic binary expression.
+   * Generic binary expression.
    */
   AstNode *_BinaryExpression(std::function<AstNode *()> builder,
                              TokenType operatorToken);
 
   /**
-   * Extra check whether it's valid assignment target.
+   * Checks whether node is a valid assignment target.
    */
-  AstNode *_checkValidAssignmentTarget(AstNode *node);
+  IdentifierNode *_checkValidAssignmentTarget(AstNode *node);
 
   /**
    * Generic helper for LogicalExpression nodes.

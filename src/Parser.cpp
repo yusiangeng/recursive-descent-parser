@@ -227,9 +227,9 @@ IdentifierNode *Parser::Identifier() {
   return new IdentifierNode(name);
 }
 
-AstNode *Parser::_checkValidAssignmentTarget(AstNode *node) {
+IdentifierNode *Parser::_checkValidAssignmentTarget(AstNode *node) {
   if (IdentifierNode *v = dynamic_cast<IdentifierNode *>(node)) {
-    return node;
+    return v;
   }
   throw SyntaxError("Invalid left-hand side in assignment expression");
 }

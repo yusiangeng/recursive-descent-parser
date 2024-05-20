@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "Environment.h"
 #include "Error.h"
 #include "EvalValue.h"
 
@@ -47,10 +48,14 @@ json BlockStatementNode::toJson() const {
   return json{{"type", type}, {"body", bodyJson}};
 }
 
-// EvalValue *BlockStatementNode::eval(Environment &env) const {
-//   for (const AstNode *statement : body) {
-//   }
-// }
+EvalValue *BlockStatementNode::eval(Environment &env) const {
+  Environment blockEnv(&env);
+  EvalValue *result = nullptr;
+  for (const AstNode *statement : body) {
+    result = statement->eval(blockEnv);
+  }
+  return result;
+}
 
 ExpressionStatementNode::ExpressionStatementNode(AstNode *expression) {
   this->type = "ExpressionStatement";
@@ -145,43 +150,26 @@ EvalValue *BinaryExpressionNode::eval(Environment &env) const {
     throw TypeError(ss.str());
   }
 
-  if (op == "+") {
+  if (op == "+")
     return new EvalNumber(leftNumber + rightNumber);
-  } else if (op == "-") {
+  else if (op == "-")
     return new EvalNumber(leftNumber - rightNumber);
-  } else if (op == "*") {
+  else if (op == "*")
     return new EvalNumber(leftNumber * rightNumber);
-  } else if (op == "/") {
+  else if (op == "/")
     return new EvalNumber(leftNumber / rightNumber);
-  } else if (op == "==") {
+  else if (op == "==")
     return new EvalBool(leftNumber == rightNumber);
-  } else if (op == "!=") {
+  else if (op == "!=")
     return new EvalBool(leftNumber != rightNumber);
-  } else if (op == "<") {
+  else if (op == "<")
     return new EvalBool(leftNumber < rightNumber);
-  } else if (op == "<=") {
+  else if (op == "<=")
     return new EvalBool(leftNumber <= rightNumber);
-  } else if (op == ">") {
+  else if (op == ">")
     return new EvalBool(leftNumber > rightNumber);
-  } else {
+  else
     return new EvalBool(leftNumber >= rightNumber);
-  }
-}
-
-AssignmentExpressionNode::AssignmentExpressionNode(std::string op,
-                                                   AstNode *left,
-                                                   AstNode *right) {
-  type = "AssignmentExpression";
-  this->op = op;
-  this->left = left;
-  this->right = right;
-}
-
-json AssignmentExpressionNode::toJson() const {
-  return json{{"type", type},
-              {"operator", op},
-              {"left", left->toJson()},
-              {"right", right->toJson()}};
 }
 
 IdentifierNode::IdentifierNode(std::string name) {
@@ -198,6 +186,66 @@ json IdentifierNode::toJson() const {
 
 EvalValue *IdentifierNode::eval(Environment &env) const {
   return env.lookup(name);
+}
+
+AssignmentExpressionNode::AssignmentExpressionNode(std::string op,
+                                                   IdentifierNode *left,
+                                                   AstNode *right) {
+  type = "AssignmentExpression";
+  this->op = op;
+  this->left = left;
+  this->right = right;
+}
+
+json AssignmentExpressionNode::toJson() const {
+  return json{{"type", type},
+              {"operator", op},
+              {"left", left->toJson()},
+              {"right", right->toJson()}};
+}
+
+EvalValue *AssignmentExpressionNode::eval(Environment &env) const {
+  if (!std::unordered_set<std::string>{"=", "+=", "-=", "*=", "/="}.count(op)) {
+    std::stringstream ss;
+    ss << "Unsupported operator " << op << " for Assignment Expression";
+    throw std::runtime_error(ss.str());
+  }
+
+  EvalValue *rightValue = right->eval(env);
+  if (op == "=") return env.assign(left->name, rightValue);
+
+  EvalValue *leftValue = left->eval(env);
+  auto *leftValueNumber = dynamic_cast<EvalNumber *>(leftValue);
+  if (!leftValueNumber) {
+    std::stringstream ss;
+    ss << "Left hand side of operation " << op
+       << " is not a number: " << leftValue->typeStr() << ": "
+       << leftValue->str();
+    throw TypeError(ss.str());
+  }
+  long long leftNumber = leftValueNumber->getValue();
+
+  long long rightNumber;
+  if (auto *rightValueNumber = dynamic_cast<EvalNumber *>(rightValue)) {
+    rightNumber = rightValueNumber->getValue();
+  } else if (auto *rightValueBool = dynamic_cast<EvalBool *>(rightValue)) {
+    rightNumber = rightValueBool->getValue();
+  } else {
+    std::stringstream ss;
+    ss << "Right hand side of operation " << op
+       << " is not a number or boolean: " << rightValue->typeStr() << ": "
+       << rightValue->str();
+    throw TypeError(ss.str());
+  }
+
+  if (op == "+=")
+    return env.assign(left->name, new EvalNumber(leftNumber + rightNumber));
+  else if (op == "-=")
+    return env.assign(left->name, new EvalNumber(leftNumber - rightNumber));
+  else if (op == "*=")
+    return env.assign(left->name, new EvalNumber(leftNumber * rightNumber));
+  else
+    return env.assign(left->name, new EvalNumber(leftNumber / rightNumber));
 }
 
 VariableStatementNode::VariableStatementNode(
@@ -239,7 +287,7 @@ json VariableDeclarationNode::toJson() const {
 
 EvalValue *VariableDeclarationNode::eval(Environment &env) const {
   env.define(id->name, init->eval(env));
-  return new EvalUndefined();
+  return env.lookup(id->name);
 }
 
 IfStatementNode::IfStatementNode(AstNode *test, AstNode *consequent,
@@ -331,11 +379,10 @@ EvalValue *LogicalExpressionNode::eval(Environment &env) const {
     throw TypeError(ss.str());
   }
 
-  if (op == "||") {
+  if (op == "||")
     return new EvalBool(leftNumber || rightNumber);
-  } else {
+  else
     return new EvalBool(leftNumber && rightNumber);
-  }
 }
 
 UnaryExpressionNode::UnaryExpressionNode(std::string op, AstNode *argument) {
