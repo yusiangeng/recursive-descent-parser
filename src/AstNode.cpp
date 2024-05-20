@@ -122,6 +122,7 @@ json BinaryExpressionNode::toJson() const {
 }
 
 EvalValue *BinaryExpressionNode::eval(Environment &env) const {
+  // TODO: implement equality for strings
   if (!std::unordered_set<std::string>{"+", "-", "*", "/", "==", "!=", "<",
                                        "<=", ">", ">="}
            .count(op)) {
